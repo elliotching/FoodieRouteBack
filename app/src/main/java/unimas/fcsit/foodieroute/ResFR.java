@@ -13,6 +13,8 @@ import android.view.MenuItem;
 
 class ResFR {
 
+    static final String currentVersion = "1.0.0.4";
+
     private final Context context;
     private static final String APP_IS_ACTIVE = "FR_app_is_active";
     static final String PREF_NAME = "FoodieRoute";
@@ -33,28 +35,40 @@ class ResFR {
     static final String DEFAULT_EMPTY = "empty";
     static final String THEME_LIGHT_DEFAULT = "Light";
     static final String THEME_DARK = "Dark";
-    static final float DEFAULT_EMPTY_LOCATION = Float.NEGATIVE_INFINITY;
+    static final float DEFAULT_EMPTY_LOCATION = -Float.MAX_VALUE;
+    static final float CHECK_EMPTY_LOCATION = ((-Float.MAX_VALUE) + 1.0f);
 
 
     // USED IN ACTIVITY LOG IN ( WHENEVER RECEIVED MESSAGE OF "LOG OUT" = 1 )
     // OPEN THE ACTIVITY LOG IN AND IT WILL CHECK THE EXISTENT OF THIS KEY
     static final String BUNDLE_KEY_KICKED_OUT = "kicked_out";
+    static final String BUNDLE_KEY_VIEW_MAP_ONLY = "view_map_only";
+    static final String BUNDLE_KEY_MAP_LOCATION = "marker_location";
+    static final String BUNDLE_KEY_VIEW_MY_FOOD_ONLY = "view_my_food_only";
+    static final String BUNDLE_KEY_ADDING_FOOD_MENU = "adding_food_menu";
 
-    static final String URL_send_mesg = "http://foodlocator.com.my/mobile/send_mesg.php";
+    // deprecated!!!
     static final String URL_get_token = "http://foodlocator.com.my/mobile/get_token.php";
-    static final String URL_sign_up = "http://foodlocator.com.my/mobile/sign_up.php";
     static final String URL_insert_token = "http://foodlocator.com.my/mobile/insert_token.php";
+
+    // currently_active!!!
+    static final String URL_send_mesg = "http://foodlocator.com.my/mobile/send_mesg.php";
+    static final String URL_sign_up = "http://foodlocator.com.my/mobile/sign_up.php";
     static final String URL_log_in = "http://foodlocator.com.my/mobile/log_in.php";
     static final String URL_check_log_in_status = "http://foodlocator.com.my/mobile/check_log_in_status.php";
     static final String URL_on_token_refresh = "http://foodlocator.com.my/mobile/on_token_refresh.php";
     static final String URL_upload = "http://foodlocator.com.my/mobile/imgupload/upload.php";
     static final String URL_add_food = "http://foodlocator.com.my/mobile/add_food.php";
     static final String URL_read_image = "http://foodlocator.com.my/mobile/imgupload/read_image.php";
+    static final String URL_read_small_image = "http://foodlocator.com.my/mobile/imgupload/read_small_image.php";
     static final String URL_get_all_food = "http://foodlocator.com.my/mobile/get_all_food.php";
+    static final String URL_get_my_food = "http://foodlocator.com.my/mobile/get_my_food.php";
+    static final String URL_check_version_update = "http://foodlocator.com.my/mobile/check_version_update.php";
     static final String URL_account_activation = "http://foodlocator.com.my/mobile/account_activation.php";
     static final String URL_change_password = "http://foodlocator.com.my/mobile/change_password.php";
     static final String URL_log_out = "http://foodlocator.com.my/mobile/log_out.php";
-
+    static final String URL_update_seller_location = "http://foodlocator.com.my/mobile/update_seller_location.php";
+    static final String URL_get_all_token = "http://foodlocator.com.my/mobile/get_all_token.php";
 
 
     ResFR(Context c){

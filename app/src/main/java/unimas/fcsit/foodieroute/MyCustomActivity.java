@@ -2,11 +2,8 @@ package unimas.fcsit.foodieroute;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +36,7 @@ class MyCustomActivity extends AppCompatActivity {
 
     AppCompatActivity activity = this;
     Context context = this;
-
+    String TAG = this.getClass().getSimpleName();
     protected void createMyView(int contentViewResID, int toolbarResID) {
         ResFR.setPrefIsAppRunning(this, true);
         debugInfo();
@@ -88,7 +85,7 @@ class MyCustomActivity extends AppCompatActivity {
         Log.d(this.getClass().getSimpleName(), "seller_ic_photo = "+seller_ic_photo);
         Log.d(this.getClass().getSimpleName(), "location (lat,lng) = "+lat+" , "+lng);
         Log.d(this.getClass().getSimpleName(), "Double.NEGATIVE_INFINITY = "+Double.NEGATIVE_INFINITY);
-        Log.d(this.getClass().getSimpleName(), "Double.POSITIVE_INFINITY = "+Double.POSITIVE_INFINITY);
+        Log.d(this.getClass().getSimpleName(), "Double.MAX_VALUE = "+Double.MAX_VALUE);
         Log.d(this.getClass().getSimpleName(), "Double.MIN_VALUE = "+Double.MIN_VALUE);
     }
 
@@ -125,23 +122,34 @@ class MyCustomActivity extends AppCompatActivity {
     private boolean showSettings = false;
     private boolean showUsername = false;
     private boolean showLogout = false;
+    private boolean showSearch = false;
 
     private MenuItem menuAddFood;
     private MenuItem menuSettings;
     private MenuItem menuUsername;
     private MenuItem menuLogout;
+    private MenuItem menuSearch;
+
+    // CALL "invalidateOptionsMenu()" TO FIRE THIS METHOD!!
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menuAddFood.setVisible(showAddFood);
+        menuUsername.setVisible(showUsername);
+        menuSettings.setVisible(showSettings);
+        menuLogout.setVisible(showLogout);
+        menuSearch.setVisible(showSearch);
+        return true;
+    }
 
     private void createMenu(Context context, Menu menu){
         menuAddFood = menu.findItem(R.id.add_food);
-
         menuSettings = menu.findItem(R.id.setting);
-
         menuUsername = menu.findItem(R.id.username);
         String username = menuUsername.getTitle().toString();
         username += ResFR.getPrefString(context, ResFR.USERNAME);
         menuUsername.setTitle(username);
-
         menuLogout = menu.findItem(R.id.log_out);
+        menuSearch = menu.findItem(R.id.menu_search);
     }
 
     protected void changeMenu(boolean showAddFood, boolean showUsername, boolean showSettings){
@@ -151,13 +159,17 @@ class MyCustomActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
     protected void changeMenu(boolean showAddFood, boolean showUsername, boolean showSettings, boolean logout){
-        this.showAddFood = showAddFood;
-        this.showUsername = showUsername;
-        this.showSettings = showSettings;
         this.showLogout = logout;
-        invalidateOptionsMenu();
+        changeMenu(showAddFood, showUsername, showSettings);
+    }
+    protected void changeMenu(boolean showAddFood, boolean showUsername, boolean showSettings, boolean logout, boolean search){
+        this.showSearch = search;
+        changeMenu(showAddFood, showUsername, showSettings, logout);
     }
 
+    void backButtonPressed(){
+        this.finish();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -165,7 +177,7 @@ class MyCustomActivity extends AppCompatActivity {
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
 
-            this.finish();
+            backButtonPressed();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -180,16 +192,6 @@ class MyCustomActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         createMenu(this, menu);
-        return true;
-    }
-
-    // CALL "invalidateOptionsMenu()" TO FIRE THIS METHOD!!
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menuAddFood.setVisible(showAddFood);
-        menuUsername.setVisible(showUsername);
-        menuSettings.setVisible(showSettings);
-        menuLogout.setVisible(showLogout);
         return true;
     }
 
@@ -214,8 +216,12 @@ class MyCustomActivity extends AppCompatActivity {
             doLogout();
             return true;
         }
+        if(item == menuSearch){
+            //
+            return true;
+        }
         if(item.getItemId() == android.R.id.home){
-            finish();
+            backButtonPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -223,14 +229,6 @@ class MyCustomActivity extends AppCompatActivity {
     /*    OPTIONS MENU    */
     /*    OPTIONS MENU    */
     /*    OPTIONS MENU    */
-
-
-
-
-
-
-
-
 
     void doLogout(){
         final Dialog_Progress p = new Dialog_Progress(activity, R.string.s_prgdialog_title_log_out, R.string.s_prgdialog_log_out, false);
@@ -261,17 +259,17 @@ class MyCustomActivity extends AppCompatActivity {
                         restartAtLogIn();
                     }
                     else{
-                        displayError(result);
+                        showDialogPhpError(result);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
 
-                    displayError(result);
+                    showDialogPhpError(result);
                 }
             }
 
             @Override
-            public void onCompleted(String result, CustomHTTP customHTTP) {
+            public void onCompleted(String result, CustomHTTP http) {
 
             }
         };
@@ -285,7 +283,7 @@ class MyCustomActivity extends AppCompatActivity {
         activity.startActivity(i);
     }
 
-    void displayError(String error){
+    void showDialogPhpError(String error){
         new Dialog_AlertNotice(context, R.string.s_dialog_title_error, error)
                 .setPositiveKey(R.string.s_dialog_btn_ok, null);
     }
@@ -350,6 +348,94 @@ class MyCustomActivity extends AppCompatActivity {
 
     String stringOf(double value){
         return String.format("%.10f", value);
+    }
+
+    String stringOf0dec(double value){
+        return String.format("%.0f", value);
+    }
+    String stringOf2dec(double value){
+        return String.format("%.2f", value);
+    }
+
+    void updateFoodDistanceStringAndDouble(FoodListingObject food, double mylat, double mylng){
+
+        double lat = food.lat;
+        double lng = food.lng;
+        String distanceString = ResFR.string(context, R.string.s_listview_fooddistance_away);
+        String locationunknown = ResFR.string(context, R.string.s_label_locationunknown);
+        double distanceValueMeterDouble = -1.0;
+        if (mylat > 90.0 || mylat < -90.0 || mylng > 180.0 || mylng < -180.0 ||
+                lat > 90.0 || lat < -90.0 || lng > 180.0 || lng < -180.0) {
+            distanceString = locationunknown;
+        } else {
+            Log.d("AdapterListView", "Location found " + mylat + " " + mylng);
+            ValueDist distance = distanceOf(mylat, mylng, lat, lng, 0.0, 0.0);
+            if(distance.unit.equals("K")) {
+                String value_unit = stringOf2dec(distance.value) + " " + "km";
+                distanceString = distanceString.replace("$distance_meter$", value_unit);
+                distanceValueMeterDouble = distance.valueInMeter;
+            }else{
+                String value_unit = stringOf0dec(distance.value) + " " + "meter";
+                distanceString = distanceString.replace("$distance_meter$", value_unit);
+            }
+        }
+
+        food.distanceString = distanceString;
+        food.distanceDouble = distanceValueMeterDouble;
+    }
+
+
+    ValueDist distanceOf(double lat1, double lon1,
+                                 double lat2, double lon2,
+                                 double el1, double el2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = el1 - el2;
+
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+        double result = Math.sqrt(distance);
+        if(result > 999.9){
+            double results = result / 1000.0;
+            return new ValueDist("K", results, result);
+        }else{
+            return new ValueDist("M", result, result);
+        }
+    }
+
+    class ValueDist{
+        final String unit;
+        final double value;
+        final double valueInMeter;
+        ValueDist(String u, double v, double m){
+            unit = u;
+            value = v;
+            valueInMeter = m;
+        }
+    }
+
+    boolean isLocationEmpty(double[] mycurrentlocation){
+        if(mycurrentlocation[0] < ResFR.CHECK_EMPTY_LOCATION || mycurrentlocation[1] < ResFR.CHECK_EMPTY_LOCATION){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    void restartFromMainActivity() {
+        Intent i = new Intent(context, ActivityMain.class);
+        activity.finish();
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(i);
     }
 }
 

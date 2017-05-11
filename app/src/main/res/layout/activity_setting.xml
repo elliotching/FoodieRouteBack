@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/d_margin_padding_activity_border"
+        android:padding="@dimen/d_margin_padding_20"
         android:orientation="vertical">
 
         <TextView
@@ -50,11 +50,11 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/d_margin_padding_activity_border"/>
+            android:layout_height="@dimen/d_margin_padding_20"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/d_margin_padding_activity_border"/>
+            android:layout_height="@dimen/d_margin_padding_20"/>
 
         <Button
             android:id="@+id/button_change_password"

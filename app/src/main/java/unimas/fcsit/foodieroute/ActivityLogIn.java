@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,11 +42,17 @@ public class ActivityLogIn extends MyCustomActivity {
 
     private CustomHTTP httpLogIn;
     private CustomHTTP httpActivation;
+    private CustomHTTP httpCheckVersionUpdate;
     private AsyncCheckLogInStatus checkLogInStatus;
+
+    private DialogButnListener dialogButtonnListener = new DialogButnListener();
 
     private Dialog_Progress progLogIn;
     private Dialog_Progress progCheck;
+    private Dialog_Progress progCheckVersionUpdate;
     private Dialog_Progress progActivation;
+
+    private boolean kicked = false;
 
     OnRequestComplete httpResult = new OnRequestComplete();
 
@@ -60,20 +66,16 @@ public class ActivityLogIn extends MyCustomActivity {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         Bundle bundle = getIntent().getExtras();
-        boolean kicked = false;
+        kicked = false;
         if (bundle != null) {
             kicked = bundle.getBoolean(ResFR.BUNDLE_KEY_KICKED_OUT, false);
         }
 
+        checkLogInStatus = new AsyncCheckLogInStatus(context);
+        checkLogInStatus.interfaceCustomHTTP = httpResult;
 
-        if (!kicked) {
+        startCheckVersionUpdate();
 
-            checkLogInStatus();
-
-        } else {
-            new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_kicked_out)
-                    .setPositiveKey(R.string.s_dialog_btn_ok, null);
-        }
         /*********************************************************
          * HOW TO GET ARGUMENTS::
          * RESULT = mFragment.getArguments().get*Boolean( KEY );
@@ -90,6 +92,16 @@ public class ActivityLogIn extends MyCustomActivity {
         buttonSignUp.setOnClickListener(new Click());
     }
 
+    private void startCheckVersionUpdate() {
+        progCheckVersionUpdate = new Dialog_Progress(activity, R.string.s_prgdialog_title_update, R.string.s_prgdialog_checking_version, false);
+        String[][] data = new String[][]{
+                {"pass", "!@#$"},
+                {"version", ResFR.currentVersion}
+        };
+        httpCheckVersionUpdate = new CustomHTTP(context, data, ResFR.URL_check_version_update);
+        httpCheckVersionUpdate.ui = httpResult;
+        httpCheckVersionUpdate.execute();
+    }
 
 
     private void checkLogInStatus() {
@@ -99,21 +111,10 @@ public class ActivityLogIn extends MyCustomActivity {
                 true);
 
         if (!ResFR.getPrefString(context, ResFR.USERNAME).equals(ResFR.DEFAULT_EMPTY)) {
-            checkLogInStatus = new AsyncCheckLogInStatus(context);
-            checkLogInStatus.interfaceCustomHTTP = httpResult;
             checkLogInStatus.start();
         } else {
             progCheck.dismiss();
         }
-    }
-
-
-    private void restartFromMainActivity() {
-        Intent i = new Intent(context, Foodie_main.class);
-        activity.finish();
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        activity.startActivity(i);
     }
 
 
@@ -274,7 +275,7 @@ public class ActivityLogIn extends MyCustomActivity {
         httpActivation.execute();
     }
 
-    private class OnRequestComplete implements InterfaceCustomHTTP{
+    private class OnRequestComplete implements InterfaceCustomHTTP {
 
         @Override
         public void onCompleted(String result) {
@@ -284,12 +285,22 @@ public class ActivityLogIn extends MyCustomActivity {
         @Override
         public void onCompleted(String result, CustomHTTP http) {
 
-            Log.d("onCompleted", "http == "+http);
+            Log.d("onCompleted", "http == " + http);
 //            Log.d("onCompleted", "http == "+httpActivation);
 //            Log.d("onCompleted", "http == "+httpLogIn);
 //            Log.d("onCompleted", "http == "+checkLogInStatus.interfaceCustomHTTP);
 
-            if(http == httpActivation){
+            if (http == httpCheckVersionUpdate) {
+
+                if (progCheckVersionUpdate != null) {
+                    progCheckVersionUpdate.dismiss();
+                }
+                validateVersionResultAndCheckKicked(result);
+
+            }
+
+            // http result of Activation...
+            if (http == httpActivation) {
                 Log.d("onCompleted", "http == httpActivation");
                 progActivation.dismiss();
                 try {
@@ -315,7 +326,7 @@ public class ActivityLogIn extends MyCustomActivity {
             }
 
 
-            if(http == httpLogIn){
+            if (http == httpLogIn) {
                 Log.d("onCompleted", "http == httpLogIn");
                 progLogIn.dismiss();
                 try {
@@ -328,7 +339,7 @@ public class ActivityLogIn extends MyCustomActivity {
                     String email = json.optString("email");
                     String is_seller = json.optString("is_seller");
 
-                    if(is_seller.equals("1") || is_seller.equals("2")) {
+                    if (is_seller.equals("1") || is_seller.equals("2")) {
                         String seller_location_lat = json.optString("seller_location_lat");
                         String seller_location_lng = json.optString("seller_location_lng");
                         String seller_ic_photo = json.optString("seller_ic_photo");
@@ -362,7 +373,7 @@ public class ActivityLogIn extends MyCustomActivity {
 
                     } else {
 
-                        displayError(result);
+                        showDialogPhpError(result);
 
                     }
                 } catch (JSONException e) {
@@ -374,7 +385,7 @@ public class ActivityLogIn extends MyCustomActivity {
                 }
             }
 
-            if(http == checkLogInStatus.httpAsyncCheck){
+            if (http == checkLogInStatus.httpAsyncCheck) {
 
                 Log.d("onCompleted", "http == checkLogInStatus.interfaceCustomHTTP");
                 progCheck.dismiss();
@@ -410,7 +421,7 @@ public class ActivityLogIn extends MyCustomActivity {
 
                             }
                         } else {
-                            displayError(result);
+                            showDialogPhpError(result);
                         }
 
                     } catch (JSONException e) {
@@ -426,7 +437,54 @@ public class ActivityLogIn extends MyCustomActivity {
             }
         }
     }
+
+    private void validateVersionResultAndCheckKicked(String s) {
+        if (!s.matches("")) {
+            try {
+                JSONArray jarray = new JSONArray(s);
+                String latest = "";
+                for (int i = 0; i < jarray.length(); i++) {
+                    latest = jarray.getJSONObject(i).optString("version");
+                }
+
+                if (!latest.equals("") && !latest.equals(ResFR.currentVersion)) {
+                    showDialogNewUpdateAvailable();
+                }else{
+                    checkIsKicked();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                showDialogPhpError(s);
+                checkIsKicked();
+            }
+        }else{
+            checkIsKicked();
+        }
+    }
+
+    private void showDialogNewUpdateAvailable() {
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_newupdateavailable).setPositiveKey(R.string.s_dialog_btn_ok, dialogButtonnListener);
+    }
+
+    private class DialogButnListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            checkIsKicked();
+        }
+    }
+
+    private void checkIsKicked() {
+        if (!kicked) {
+            checkLogInStatus();
+        } else {
+            new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_kicked_out)
+                    .setPositiveKey(R.string.s_dialog_btn_ok, null);
+        }
+    }
 }
+
+
 //        try {
 //            String example = "{\"username\":\"尽力\",\"activated\":\"0\"}{\"multicast_id\":6125173515992925350,\"success\":1,\"failure\":0,\"canonical_ids\":0,\"results\":[{\"message_id\":\"0:1493132659266227%69d8bb63f9fd7ecd\"}]}";
 //

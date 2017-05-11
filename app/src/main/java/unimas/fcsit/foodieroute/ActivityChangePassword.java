@@ -3,10 +3,8 @@ package unimas.fcsit.foodieroute;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -95,7 +93,7 @@ public class ActivityChangePassword extends MyCustomActivity {
                                 .setPositiveKey(R.string.s_dialog_btn_ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        restartFromLogIn();
+                                        restartAtLogIn();
                                     }
                                 });
                     }
@@ -103,27 +101,17 @@ public class ActivityChangePassword extends MyCustomActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    displayError(result);
+                    showDialogPhpError(result);
                 }
             }
 
             @Override
-            public void onCompleted(String result, CustomHTTP customHTTP) {
+            public void onCompleted(String result, CustomHTTP http) {
 
             }
         };
 
         c.execute();
-    }
-
-    private void restartFromLogIn() {
-        ResFR.setPrefString(context, ResFR.USERNAME, ResFR.DEFAULT_EMPTY);
-        ResFR.setPrefString(context, ResFR.EMAIL, ResFR.DEFAULT_EMPTY);
-        Intent ii = new Intent(context, ActivityLogIn.class);
-        ii.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        ii.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        activity.finish();
-        activity.startActivity(ii);
     }
 
     private void createDialogForAccountActivation(){
@@ -200,9 +188,7 @@ public class ActivityChangePassword extends MyCustomActivity {
                     JSONObject json = new JSONObject(result);
                     String success = json.optString("success", "");
                     if(success.equals("1")){
-                        Intent i = new Intent(context, Foodie_main.class);
-                        activity.finish();
-                        startActivity(i);
+                        restartFromMainActivity();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -218,7 +204,7 @@ public class ActivityChangePassword extends MyCustomActivity {
             }
 
             @Override
-            public void onCompleted(String result, CustomHTTP customHTTP) {
+            public void onCompleted(String result, CustomHTTP http) {
 
             }
         };

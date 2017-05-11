@@ -35,36 +35,6 @@ public class ActivitySetting extends MyCustomActivity {
         initUIsetup();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            restartGoToActivityMain();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /* RESTART THE ACTIVITY WITH REMOVE ALL TOP ACTIVITY */
-    private void restartGoToActivityMain(){
-        Intent intent = new Intent(context, Foodie_main.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        activity.finish();
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Build.VERSION.SDK_INT > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-
-            restartGoToActivityMain();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void initUIsetup(){
 
 
@@ -113,5 +83,10 @@ public class ActivitySetting extends MyCustomActivity {
                 activity.startActivity(intent);
             }
         }
+    }
+
+    @Override
+    void backButtonPressed() {
+        restartFromMainActivity();
     }
 }

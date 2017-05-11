@@ -4,16 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,13 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.ACCESS_WIFI_STATE;
-import static android.Manifest.permission.CHANGE_WIFI_STATE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static android.location.LocationManager.GPS_PROVIDER;
-import static android.location.LocationManager.NETWORK_PROVIDER;
 import static unimas.fcsit.foodieroute.R.string.s_dialog_msg_location_not_granted;
 
 /**
@@ -51,15 +45,17 @@ public class ActivityMaps extends MyCustomActivity {
     FusedLocationDataInterface fusedLocationDataInterface;
 
     Button buttonSaveLocation;
-
+    CheckBox checkBoxAutoMyLoc;
     double[] markerLocation;
+
+    private Listener listener;
 
     private final static int mapZoomLevel = 18;
 
+    boolean useMyCurrentLocation = true;
 
     Context context = this;
     AppCompatActivity activity = (AppCompatActivity) context;
-
     private static Dialog_Progress dialogProgress_loadLocation;
 
     @Override
@@ -70,25 +66,61 @@ public class ActivityMaps extends MyCustomActivity {
 
         changeMenu(false, false, false);
 
+        listener = new Listener();
+        checkBoxAutoMyLoc = (CheckBox) findViewById(R.id.checkbox_currentlocation);
         buttonSaveLocation = (Button) findViewById(R.id.button_save_location);
-        buttonSaveLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveLocation();
+
+        buttonSaveLocation.setOnClickListener(listener);
+        checkBoxAutoMyLoc.setOnCheckedChangeListener(listener);
+
+        checkIsViewOnlyOrToChooseLocation(savedInstanceState);
+
+
+
+
+    }
+
+    private void checkIsViewOnlyOrToChooseLocation(Bundle savedInstanceState) {
+        Intent i = getIntent();
+        if(i != null){
+            boolean viewmaponly = i.getBooleanExtra(ResFR.BUNDLE_KEY_VIEW_MAP_ONLY, false);
+            double[] location = i.getDoubleArrayExtra(ResFR.BUNDLE_KEY_MAP_LOCATION);
+            if(viewmaponly && location != null){
+                buttonSaveLocation.setVisibility(View.GONE);
+                checkBoxAutoMyLoc.setVisibility(View.GONE);
+
+
+
+                mapView = (MapView) findViewById(R.id.mapView);
+                mapView.onCreate(savedInstanceState);
+                mapView.onResume();
+                shiftMarkerToSpecificLocation(location);
             }
-        });
+        }
+        else{
+            mapView = (MapView) findViewById(R.id.mapView);
+            mapView.onCreate(savedInstanceState);
+            mapView.getMapAsync(new OnMapReady());
+            mapView.onResume();
+        }
+    }
 
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReady());
-        mapView.onResume();
-//        mapView.onResume();
+    private void shiftMarkerToSpecificLocation(double[] location) {
+        if (currLocationMarker != null) {
+            currLocationMarker.remove();
+        }
+        //Place current location marker
+        LatLng latLng = new LatLng(location[0], location[1]);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker());
+        currLocationMarker = googleMap.addMarker(markerOptions);
 
-        dialogProgress_loadLocation = new Dialog_Progress(activity, "Location", "Getting user's location...", true);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mapZoomLevel));
     }
 
 
-    private class DataInterface implements FusedLocationDataInterface {
+    private class Listener implements FusedLocationDataInterface, GoogleMap.OnMapClickListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void getFusedLocationData(Location location) {
@@ -103,10 +135,29 @@ public class ActivityMaps extends MyCustomActivity {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mapZoomLevel));
             }
 
-            shiftMarkerToCurrentLocation();
-
+            if(useMyCurrentLocation) {
+                shiftMarkerToCurrentLocation();
+            }
             // Options: auto put marker at my current location
             // Options: auto move screen to my current location
+        }
+
+        @Override
+        public void onMapClick(LatLng latLng) {
+            if(!useMyCurrentLocation) {
+                shiftMarkerToTouchedLocation(latLng);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            saveLocation();
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            useMyCurrentLocation = isChecked;
+            shiftMarkerToCurrentLocation();
         }
     }
 
@@ -121,15 +172,16 @@ public class ActivityMaps extends MyCustomActivity {
 
             //Initialize Google Play Services
 
-            googleMap.setOnMapClickListener(new OnMapTouched());
+            googleMap.setOnMapClickListener(listener);
 
 
             // if device OS SDK >= 23 (Marshmallow)
             if (Build.VERSION.SDK_INT >= 23) {
                 //IF Location Permission already granted
                 if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-                    fusedLocationDataInterface = new DataInterface();
+                    fusedLocationDataInterface = listener;
                     fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
+                    dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
                     // enable button + cursor of "MyLocation" on top right corner
                     googleMap.setMyLocationEnabled(true);
                 } else {
@@ -141,8 +193,9 @@ public class ActivityMaps extends MyCustomActivity {
             else {
                 // check location here
                 if (checkLocationPermission_v22()) {
-                    fusedLocationDataInterface = new DataInterface();
+                    fusedLocationDataInterface = listener;
                     fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
+                    dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
                     // enable button + cursor of "MyLocation" on top right corner
                     googleMap.setMyLocationEnabled(true);
                 } else {
@@ -156,14 +209,6 @@ public class ActivityMaps extends MyCustomActivity {
                     new Dialog_AlertNotice(context, "Location", StringWarningLocationNotGranted).setPositiveKey("OK", onClickListener);
                 }
             }
-        }
-    }
-
-    private class OnMapTouched implements GoogleMap.OnMapClickListener {
-
-        @Override
-        public void onMapClick(LatLng latLng) {
-            shiftMarkerToTouchedLocation(latLng);
         }
     }
 
@@ -202,40 +247,16 @@ public class ActivityMaps extends MyCustomActivity {
         Intent i = new Intent();
         i.putExtra("savedlocation", markerLocation);
         setResult(RESULT_OK, i);
-        this.onPause();
+        backButtonPressed();
     }
 
     @Override
-    public void onPause() {
-        mapView.onPause();
+    void backButtonPressed() {
         super.onPause();
+        mapView.onPause();
         fusedLocationTracker.stopLocationUpdates();
-
-        activity.finish();
+        super.backButtonPressed();
     }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (Build.VERSION.SDK_INT > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            activity.finish();
-            fusedLocationTracker.stopLocationUpdates();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            fusedLocationTracker.stopLocationUpdates();
-            activity.finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
 
 /*

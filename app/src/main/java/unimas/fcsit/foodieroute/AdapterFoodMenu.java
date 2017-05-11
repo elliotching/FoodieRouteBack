@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by Elliot on 19-Aug-16.
  */
-class AdapterFoodListingListViewElliot extends BaseAdapter {
+class AdapterFoodMenu extends BaseAdapter {
 
     private Context context;
     private ArrayList<FoodListingObject> data;
@@ -26,7 +26,7 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
 
     static double[] myLocation = new double[]{-Double.MAX_VALUE , -Double.MAX_VALUE};
 
-    public AdapterFoodListingListViewElliot(Context context, ArrayList<FoodListingObject> data) {
+    public AdapterFoodMenu(Context context, ArrayList<FoodListingObject> data) {
         this.data = data;
         this.context = context;
     }
@@ -90,9 +90,9 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         holder.textFoodName.setText(data.get(position).food_name);
 
         /* username who posted/shared this food */
-        String poster = ResFR.string(context, R.string.s_listview_username);
-        poster = poster.replace("$user$", data.get(position).username);
-        holder.textUsername.setText(poster);
+//        String poster = ResFR.string(context, R.string.s_listview_username);
+//        poster = poster.replace("$user$", data.get(position).username);
+        holder.textUsername.setText("");
 
         /* Price of food. */
         String price = ResFR.string(context, R.string.s_listview_price);
@@ -107,9 +107,7 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         holder.textSellerName.setText(data.get(position).seller_name);
 
         /* Comment: */
-        String comment = ResFR.string(context, R.string.s_listview_comment);
-        comment = comment + " " + data.get(position).food_comment;
-        holder.textFoodComment.setText(comment);
+        holder.textFoodComment.setText("");
         
         holder.textDistance.setText(data.get(position).distanceString);
 
@@ -147,58 +145,3 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         return String.format("%.0f", value);
     }
 }
-
-//    final String date_time;
-//    final String username;
-//    final String image_file_name;
-//    final String food_name;
-//    final String food_price;
-//    final String seller_location_lat;
-//    final String seller_location_lng;
-//    final String seller_name;
-//    final String is_seller;
-//    final String food_comment;
-//        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-//
-//    Context context;
-//    ArrayList<FoodListingObject> mDataArrayList;
-//
-//    public AdapterFoodListingListViewElliot(Context c, ArrayList<FoodListingObject> data) {
-//        context = c;
-//        mDataArrayList = data;
-//    }
-//
-//    @Override
-//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        final View view = LayoutInflater.from(context).inflate(R.layout.list_view_single_item_layout, parent, false);
-//        ElliotHolder h = new ElliotHolder(view);
-//        return new ElliotHolder(view);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//        ElliotHolder elliotHolder = (ElliotHolder) holder;
-//        elliotHolder.thisTextView = (TextView) elliotHolder.thisItemView.findViewById(R.id.m_list_view_item_text_view);
-//        elliotHolder.thisI = (ImageView) elliotHolder.thisItemView.findViewById(R.id.image);
-//        elliotHolder.thisTextView.setText(mDataArrayList.get(position).text);
-////        elliotHolder.thisTextView.setBackgroundResource(mDataArrayList.get(position).colorID);
-//        elliotHolder.thisI.setImageResource(mDataArrayList.get(position).photoRes);
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return mDataArrayList.size();
-//    }
-//
-//    private class ElliotHolder extends RecyclerView.ViewHolder {
-//        TextView thisTextView;
-//        ImageView thisI;
-//        View thisItemView;
-//
-//        public ElliotHolder(View itemView) {
-//            super(itemView);
-//            thisItemView = itemView;
-//        }
-//    }
-//
-//}

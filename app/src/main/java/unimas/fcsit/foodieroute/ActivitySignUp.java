@@ -53,7 +53,7 @@ public class ActivitySignUp extends MyCustomActivity {
         signUp = (Button) findViewById(R.id.button_sign_up);
         checkBoxSeller = (CheckBox) findViewById(R.id.checkbox_isseller);
         buttonLocation = (Button) findViewById(R.id.button_location);
-        editShopname = (EditText) findViewById(R.id.editext_shopname);
+        editShopname = (EditText) findViewById(R.id.edittext_shopname);
         checkBoxMobileSeller = (CheckBox) findViewById(R.id.checkbox_mobileseller);
         layoutSeller = (LinearLayout) findViewById(R.id.linearlayout_sellersignupforms);
         layoutSeller.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class ActivitySignUp extends MyCustomActivity {
             }
 
             @Override
-            public void onCompleted(String result, CustomHTTP customHTTP) {
+            public void onCompleted(String result, CustomHTTP http) {
 
             }
         };
@@ -240,7 +240,7 @@ public class ActivitySignUp extends MyCustomActivity {
             }
 
             @Override
-            public void onCompleted(String result, CustomHTTP customHTTP) {
+            public void onCompleted(String result, CustomHTTP http) {
 
             }
         };

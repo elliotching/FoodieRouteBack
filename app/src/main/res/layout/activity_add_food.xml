@@ -13,13 +13,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/d_margin_padding_activity_border">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/d_margin_padding_20">
 
             <!--&lt;!&ndash; height is not really 1 dp, java code has been manipulated the value&ndash;&gt;-->
             <!--<ImageView-->
@@ -149,31 +149,37 @@
 
             </LinearLayout>
 
-            <!-- Location -->
+            <!-- Share Food Location -->
             <LinearLayout
                 android:id="@+id/linearlayout_addfoodlocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:gravity="center_vertical"
-                    android:text="@string/s_label_form_food_location_activity_add_food"
-                    android:textSize="@dimen/d_text_size_medium" />
-
-                <Button
-                    android:id="@+id/button_choose_location"
-                    style="@style/style_for_default_button_and_text_size_no_theme"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:text="@string/s_button_no_location_choosen" />
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center_vertical"
+                        android:text="@string/s_label_form_food_location_activity_add_food"
+                        android:textSize="@dimen/d_text_size_medium" />
+
+                    <Button
+                        android:id="@+id/button_choose_location"
+                        style="@style/style_for_default_button_and_text_size_no_theme"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:text="@string/s_button_no_location_choosen" />
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/edittext_shopname"
@@ -182,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/s_hint_shopname"
                     android:inputType="text"
-                    android:textSize="@dimen/d_text_size_medium"/>
+                    android:textSize="@dimen/d_text_size_medium" />
 
                 <EditText
                     android:id="@+id/edittext_comment"
@@ -190,10 +196,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/s_hint_commentdescription"
-                    android:inputType="text"
-                    android:textSize="@dimen/d_text_size_small"/>
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/d_text_size_small" />
 
             </LinearLayout>
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linearlayout_addfoodmenudescription"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/edit_description"-->
+                    <!--style="@style/style_margin_for_multiple_view"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/s_hint_menufooddescription"-->
+                    <!--android:inputType="textMultiLine"-->
+                    <!--android:textSize="@dimen/d_text_size_small" />-->
+
+            <!--</LinearLayout>-->
 
             <Button
                 android:id="@+id/button_submit"

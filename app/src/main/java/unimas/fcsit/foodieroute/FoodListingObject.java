@@ -16,9 +16,11 @@ class FoodListingObject {
     final String food_comment;
     final double lat;
     final double lng;
+    String distanceString = "";
+    double distanceDouble = -1.0;
 
 
-    FoodListingObject(String date_time, String username, String image_file_name, String food_name, String food_price, String seller_location_lat, String seller_location_lng, String is_seller, String seller_name, String food_comment) {
+    FoodListingObject(String date_time, String username, String image_file_name, String food_name, String food_price, String seller_location_lat, String seller_location_lng, String seller_name, String is_seller, String food_comment) {
 
         this.date_time = date_time;
         this.username = username;
@@ -37,6 +39,10 @@ class FoodListingObject {
     }
 
     private double doubleOf(String s){
-        return Double.parseDouble(s);
+        try {
+            return Double.valueOf(s);
+        }catch(Exception e){
+            return -Double.MAX_VALUE;
+        }
     }
 }

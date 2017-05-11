@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/d_margin_padding_activity_border"
+            android:layout_margin="@dimen/d_margin_padding_20"
             android:orientation="vertical">
 
             <EditText
@@ -75,7 +75,7 @@
                 style="@style/style_margin_for_multiple_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/d_margin_padding_activity_border"
+                android:layout_margin="@dimen/d_margin_padding_20"
                 android:checked="false"
                 android:text="@string/s_checkbox_iwanttoregisterasseller"
                 android:textSize="@dimen/d_text_size_medium" />
@@ -84,8 +84,8 @@
                 android:id="@+id/linearlayout_sellersignupforms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/d_margin_padding_activity_border"
-                android:layout_marginTop="@dimen/d_margin_padding_activity_border"
+                android:layout_marginBottom="@dimen/d_margin_padding_20"
+                android:layout_marginTop="@dimen/d_margin_padding_20"
                 android:orientation="vertical">
 
                 <CheckBox
@@ -93,7 +93,7 @@
                     style="@style/style_margin_for_multiple_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/d_margin_padding_activity_border"
+                    android:layout_margin="@dimen/d_margin_padding_20"
                     android:checked="false"
                     android:text="@string/s_checkbox_im_moving_everyday"
                     android:textSize="@dimen/d_text_size_medium" />
@@ -106,7 +106,7 @@
                     android:text="@string/s_label_shopname" />
 
                 <EditText
-                    android:id="@+id/editext_shopname"
+                    android:id="@+id/edittext_shopname"
                     style="@style/style_margin_bottom_l_r_multiple_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

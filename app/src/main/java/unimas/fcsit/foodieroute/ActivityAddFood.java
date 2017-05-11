@@ -58,7 +58,6 @@ public class ActivityAddFood extends MyCustomActivity {
         super.onCreate(savedInstanceState);
 
         createMyView(R.layout.activity_add_food, R.id.toolbar_add_food);
-
         changeMenu(false, true, false);
 
         editTextFoodPrice = (EditText) findViewById(R.id.edittext_food_price);
@@ -75,7 +74,7 @@ public class ActivityAddFood extends MyCustomActivity {
         LinearLayout linearLayoutFoodLocation = (LinearLayout) findViewById(R.id.linearlayout_addfoodlocation);
 
         editComment = (EditText) findViewById(R.id.edittext_comment);
-        editShopname = (EditText) findViewById(R.id.editext_shopname);
+        editShopname = (EditText) findViewById(R.id.edittext_shopname);
 
         String is_seller = ResFR.getPrefString(context, ResFR.IS_SELLER);
         if (is_seller.equals("1") || is_seller.equals("2")) {
@@ -272,7 +271,6 @@ public class ActivityAddFood extends MyCustomActivity {
                 if (pickedLocation != null) {
                     seller_location_lat = stringOf(pickedLocation[0]);
                     seller_location_lng = stringOf(pickedLocation[1]);
-                    seller_name = ResFR.getPrefString(context, ResFR.SELLER_NAME);
                 }
             }
             String username = ResFR.getPrefString(context, ResFR.USERNAME);
@@ -306,8 +304,8 @@ public class ActivityAddFood extends MyCustomActivity {
         }
 
         @Override
-        public void onCompleted(String result, CustomHTTP customHTTP) {
-            if(customHTTP == httpAddFood){
+        public void onCompleted(String result, CustomHTTP http) {
+            if(http == httpAddFood){
                 dialog_progress_submit.dismiss();
                 try {
                     JSONObject json = new JSONObject(result);

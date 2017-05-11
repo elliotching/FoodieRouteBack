@@ -2,15 +2,12 @@ package unimas.fcsit.foodieroute;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -22,19 +19,13 @@ import java.util.ArrayList;
 /**
  * Created by Elliot on 19-Aug-16.
  */
-public class ActivityFoodListingListViewElliot extends MyCustomActivity {
+public class ActivityFoodMenu extends MyCustomActivity {
 
     private String TAG = this.getClass().getSimpleName();
     Context context = this;
     AppCompatActivity activity = this;
-    ListView mListView;
     ListView listView;
-    Toolbar mToolbar;
-
-    private Button buttonsharedbycustomer;
-    private Button buttonfoodmenulist;
-
-    AdapterFoodListingListViewElliot adapter;
+    AdapterFoodMenu adapter;
 
     private FusedLocationTracker locationTracker;
 
@@ -43,67 +34,43 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
     private ArrayList<FoodListingObject> foodArray;
 
     private Listener allListener;
-    private CustomHTTP httpGetAllFoodUser;
-    private CustomHTTP httpGetAllFoodSeller;
-
-    private final static String SELLER = "get_seller_foods_only";
-    private final static String USER = "get_user_foods_only";
-    private final static String ALL = "get_all_foods";
+    private CustomHTTP httpGetAllMyFood;
+//
+//    private final static String SELLER = "get_seller_foods_only";
+//    private final static String USER = "get_user_foods_only";
+//    private final static String ALL = "get_all_foods";
     //    private LocationListener locationListener;
 //    private ItemClicked adapterClickedListener;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createMyView(R.layout.activity_food_listing_list_view, R.id.m_list_view_toolbar);
+        createMyView(R.layout.activity_food_menu, R.id.toolbar);
 
-        changeMenu(false, true, false, false, true);
-        listView = (ListView) findViewById(R.id.m_list_view);
-
-        buttonsharedbycustomer = (Button) findViewById(R.id.button_sharedbycustomer);
-        buttonfoodmenulist = (Button) findViewById(R.id.button_foodmenu);
+        changeMenu(false, true, false, false, false);
+        listView = (ListView) findViewById(R.id.listview);
 
         allListener = new Listener();
 
-        buttonsharedbycustomer.setOnClickListener(allListener);
-        buttonfoodmenulist.setOnClickListener(allListener);
-
         listView.setOnItemClickListener(allListener);
-
-        locationTracker = new FusedLocationTracker(context, allListener);
-
-
-
-
-        getAllFoodUser();
-    }
-
-    private void getAllFoodUser() {
-        if(progGetAllFoods != null){
-            progGetAllFoods.dismiss();
-        }
-
-        progGetAllFoods = new Dialog_Progress(activity, R.string.s_prgdialog_title_loading, R.string.s_prgdialog_loading_all_food, true);
+        String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"}
+                {"pass", "!@#$"},
+                {"username", username}
         };
-        httpGetAllFoodUser = new CustomHTTP(context, data, ResFR.URL_get_all_food);
-        httpGetAllFoodUser.ui = allListener;
-        httpGetAllFoodUser.execute();
+        httpGetAllMyFood = new CustomHTTP(context, data, ResFR.URL_get_my_food);
+
+        startGetAllMyFood();
     }
 
-    private void getAllFoodSeller() {
+    private void startGetAllMyFood() {
         if(progGetAllFoods != null){
             progGetAllFoods.dismiss();
         }
         progGetAllFoods = new Dialog_Progress(activity, R.string.s_prgdialog_title_loading, R.string.s_prgdialog_loading_all_food, true);
 
-        String[][] data = new String[][]{
-                {"pass", "!@#$"}
-        };
-        httpGetAllFoodSeller = new CustomHTTP(context, data, ResFR.URL_get_all_food);
-        httpGetAllFoodSeller.ui = allListener;
-        httpGetAllFoodSeller.execute();
+        httpGetAllMyFood.ui = allListener;
+        httpGetAllMyFood.execute();
     }
 //    void f(){
 //
@@ -113,26 +80,14 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
 //        listView.setOnItemClickListener(new ListViewOnClick());
 //    }
 
-    private class Listener implements FusedLocationDataInterface, InterfaceCustomHTTP, AdapterView.OnItemClickListener, View.OnClickListener {
+    private class Listener implements  InterfaceCustomHTTP, AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             FoodListingObject food = (FoodListingObject) adapter.getItem(position);
             ActivityFoodDetail.viewingFood = food;
             Intent i = new Intent(context, ActivityFoodDetail.class);
-//            locationTracker.stopLocationUpdates();
             startActivity(i);
-        }
-
-        @Override
-        public void getFusedLocationData(Location location) {
-            Log.d(TAG, "fusedLocationChanged.");
-
-            AdapterFoodListingListViewElliot.myLocation = new double[]{location.getLatitude(), location.getLongitude()};
-
-            if(foodArray != null){
-                refreshList(location);
-            }
         }
 
         @Override
@@ -146,27 +101,15 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
 
             Log.d("OnCompleteGetAllFood", result);
 
-            if (http == httpGetAllFoodUser) {
-                onCompleteGetFoodDoArrayList(result, USER);
-            }
-            if (http == httpGetAllFoodSeller) {
-                onCompleteGetFoodDoArrayList(result, SELLER);
+            if (http == httpGetAllMyFood) {
+                onCompleteGetFoodDoArrayList(result);
             }
         }
 
 
-        @Override
-        public void onClick(View v) {
-            if(v==buttonsharedbycustomer){
-                getAllFoodUser();
-            }
-            if(v==buttonfoodmenulist){
-                getAllFoodSeller();
-            }
-        }
     }
 
-    private void onCompleteGetFoodDoArrayList(String result, String user_or_seller) {
+    private void onCompleteGetFoodDoArrayList(String result) {
         if (isJSONArray(result)) {
             try {
 
@@ -193,23 +136,9 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
                     String time = datetime[1];
                     date_time = date + " " + time;
 
-                    if(user_or_seller.equals(USER)) {
-                        if (is_seller.equals("0")) {
-                            FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
-                            food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);
-                            foodArray.add(food);
-                        }
-                    }else if(user_or_seller.equals(SELLER)){
-                        if (is_seller.equals("1") || is_seller.equals("2")) {
-                            FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, "");
-                            food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);
-                            foodArray.add(food);
-                        }
-                    }else{
-                        FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
-                        food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);
-                        foodArray.add(food);
-                    }
+                    FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
+                    food.distanceString = "";
+                    foodArray.add(food);
                 }
 
                 populateList();
@@ -227,20 +156,20 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
     private void showDialogError(String result) {
         new Dialog_AlertNotice(context, R.string.s_dialog_title_error, result).setPositiveKey(R.string.s_dialog_btn_ok, null);
     }
-
-    private void refreshList(Location location) {
-        Log.d(TAG, "List refreshing");
-
-        for(int i = 0; i < foodArray.size(); i++) {
-            updateFoodDistanceStringAndDouble(foodArray.get(i), location.getLatitude(), location.getLongitude());
-        }
-
-        listView.invalidateViews();
-    }
+//
+//    private void refreshList(Location location) {
+//        Log.d(TAG, "List refreshing");
+//
+//        for(int i = 0; i < foodArray.size(); i++) {
+//            updateFoodDistanceStringAndDouble(foodArray.get(i), location.getLatitude(), location.getLongitude());
+//        }
+//
+//        listView.invalidateViews();
+//    }
 
     private void populateList() {
         Log.d(TAG, "List populated. set-up.");
-        adapter = new AdapterFoodListingListViewElliot(context, foodArray);
+        adapter = new AdapterFoodMenu(context, foodArray);
         listView.setAdapter(adapter);
     }
 
@@ -264,10 +193,6 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
         return true;
     }
 
-    void backButtonPressed(){
-        locationTracker.stopLocationUpdates();
-        super.backButtonPressed();
-    }
 }
 
 //        listView.setLayoutManager(new LinearLayoutManager(context));

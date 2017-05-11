@@ -84,7 +84,7 @@ public class ServiceAndroidFirebaseInstanceIDElliot extends FirebaseInstanceIdSe
         }
 
         @Override
-        public void onCompleted(String result, CustomHTTP customHTTP) {
+        public void onCompleted(String result, CustomHTTP http) {
 
         }
     }

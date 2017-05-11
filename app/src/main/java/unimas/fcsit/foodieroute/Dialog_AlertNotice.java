@@ -73,7 +73,14 @@ class Dialog_AlertNotice {
     Dialog_AlertNotice setPositiveKey(String positiveKey, DialogInterface.OnClickListener onClick) {
         d.setPositiveButton(positiveKey, onClick);
         boolean isRunning = ResFR.getPrefIsAppRunning(context);
-        if(isRunning)d.show();
+        if(isRunning){
+            try{
+                d.show();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
@@ -82,14 +89,28 @@ class Dialog_AlertNotice {
         String positiveKey = r.string(_positiveKey);
         d.setPositiveButton(positiveKey, onClick);
         boolean isRunning = ResFR.getPrefIsAppRunning(context);
-        if(isRunning)d.show();
+        if(isRunning){
+            try{
+                d.show();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
     Dialog_AlertNotice setNegativeKey(String negativeKey, DialogInterface.OnClickListener onClick) {
         d.setNegativeButton(negativeKey, onClick);
         boolean isRunning = ResFR.getPrefIsAppRunning(context);
-        if(isRunning)d.show();
+        if(isRunning){
+            try{
+                d.show();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 
@@ -98,7 +119,14 @@ class Dialog_AlertNotice {
         String negativeKey = r.string(_negativeKey);
         d.setNegativeButton(negativeKey, onClick);
         boolean isRunning = ResFR.getPrefIsAppRunning(context);
-        if(isRunning)d.show();
+        if(isRunning){
+            try{
+                d.show();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         return this;
     }
 }

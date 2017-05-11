@@ -169,7 +169,7 @@ public class ActivityPostHTTPDataFirebaseTest extends AppCompatActivity {
         }
 
         @Override
-        public void onCompleted(String result, CustomHTTP customHTTP) {
+        public void onCompleted(String result, CustomHTTP http) {
 
         }
     }
@@ -209,7 +209,7 @@ public class ActivityPostHTTPDataFirebaseTest extends AppCompatActivity {
         }
 
         @Override
-        public void onCompleted(String result, CustomHTTP customHTTP) {
+        public void onCompleted(String result, CustomHTTP http) {
 
         }
     }

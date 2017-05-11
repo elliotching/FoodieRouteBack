@@ -70,7 +70,6 @@ public class FragmentLogIn extends Fragment {
 //        this.getArguments().getBoolean()
 //        activity.getSupportActionBar().addOnMenuVisibilityListener();
 
-        activity.supportInvalidateOptionsMenu();
 
 
         return view;

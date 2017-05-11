@@ -67,10 +67,9 @@ class Dialog_CustomNotice extends AlertDialog {
         setButton(DialogInterface.BUTTON_POSITIVE, keyText, onClick);
 
         if (showDialogYet) {
-            boolean isRunning = ResFR.getPrefIsAppRunning(context);
-            if (isRunning) {
+            try {
                 show();
-            } else {
+            } catch(Exception e) {
                 ((AppCompatActivity)context).finish();
                 return null;
             }
@@ -88,11 +87,11 @@ class Dialog_CustomNotice extends AlertDialog {
         String keyText = ResFR.string(context, _buttonText);
         setButton(DialogInterface.BUTTON_NEGATIVE, keyText, onClick);
 
+
         if (showDialogYet) {
-            boolean isRunning = ResFR.getPrefIsAppRunning(context);
-            if (isRunning) {
+            try {
                 show();
-            } else {
+            } catch(Exception e) {
                 ((AppCompatActivity)context).finish();
                 return null;
             }
@@ -104,11 +103,11 @@ class Dialog_CustomNotice extends AlertDialog {
         String keyText = ResFR.string(context, _buttonText);
         setButton(DialogInterface.BUTTON_NEUTRAL, keyText, onClick);
 
+
         if (showDialogYet) {
-            boolean isRunning = ResFR.getPrefIsAppRunning(context);
-            if (isRunning) {
+            try {
                 show();
-            } else {
+            } catch(Exception e) {
                 ((AppCompatActivity)context).finish();
                 return null;
             }

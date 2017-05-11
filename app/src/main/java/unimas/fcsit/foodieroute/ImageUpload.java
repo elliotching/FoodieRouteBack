@@ -87,7 +87,7 @@ class ImageUpload {
         }
 
         @Override
-        public void onCompleted(String result, CustomHTTP customHTTP) {
+        public void onCompleted(String result, CustomHTTP http) {
 
         }
     }

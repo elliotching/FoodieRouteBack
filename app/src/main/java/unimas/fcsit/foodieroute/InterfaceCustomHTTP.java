@@ -6,5 +6,5 @@ package unimas.fcsit.foodieroute;
 
 interface InterfaceCustomHTTP {
     void onCompleted(String result);
-    void onCompleted(String result, CustomHTTP customHTTP);
+    void onCompleted(String result, CustomHTTP http);
 }
