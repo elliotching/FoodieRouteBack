@@ -27,15 +27,15 @@ public class SplashScreen extends AppCompatActivity {
     boolean tokenSuccess = false;
 
     public void onCreate(Bundle ins) {
-//        Resources res = context.getResources();
-//// Change locale settings in the app.
-//        String lg = Locale.getDefault().getLanguage();
-//        Log.d("language", lg);
-//        DisplayMetrics dm = res.getDisplayMetrics();
-//        android.content.res.Configuration conf = res.getConfiguration();
-//        conf.locale = (new Locale(lg)); // API 17+ only.
-//// Use conf.locale = new Locale(...) if targeting lower versions
-//        res.updateConfiguration(conf, dm);
+        Resources res = context.getResources();
+// Change locale settings in the app.
+        String lg = Locale.getDefault().toString();
+        Log.d("language", lg);
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = (new Locale(lg)); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
 
         super.onCreate(ins);
 

@@ -94,6 +94,15 @@
                 android:text="@string/s_button_viewfoodlist"
                 android:textSize="@dimen/d_text_size_small" />
 
+            <!--Seller-->
+            <Button
+                android:id="@+id/button_broadcast"
+                style="@style/style_default_button_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/s_button_broadcast"
+                android:textSize="@dimen/d_text_size_small" />
+
             <!--<Button-->
                 <!--android:id="@+id/button_updatelocation"-->
                 <!--style="@style/style_for_coloured_button_and_text_size"-->

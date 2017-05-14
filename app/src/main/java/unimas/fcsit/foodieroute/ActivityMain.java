@@ -22,6 +22,7 @@ public class ActivityMain extends MyCustomActivity {
     Button buttonusersharefood;
     Button buttonsellerviewmyfoodmenu;
     Button buttonallviewlistfood;
+    Button buttonbroadcast;
     TextView textLocationInfo;
 
     private Listener listener;
@@ -40,6 +41,7 @@ public class ActivityMain extends MyCustomActivity {
         buttonusersharefood = (Button) findViewById(R.id.button_sharefooduser);
         buttonsellerviewmyfoodmenu = (Button) findViewById(R.id.button_viewmyfoodmenu);
         buttonallviewlistfood = (Button) findViewById(R.id.button_viewfoodlist);
+        buttonbroadcast = (Button) findViewById(R.id.button_broadcast);
         textLocationInfo = (TextView) findViewById(R.id.text_showlocation);
 
         listener = new Listener();
@@ -48,6 +50,7 @@ public class ActivityMain extends MyCustomActivity {
         buttonusersharefood.setOnClickListener(listener);
         buttonsellerviewmyfoodmenu.setOnClickListener(listener);
         buttonallviewlistfood.setOnClickListener(listener);
+        buttonbroadcast.setOnClickListener(listener);
 
         /* get my current location */
         mycurrentlocation = ResFR.getPrefLocation(context);
@@ -76,6 +79,7 @@ public class ActivityMain extends MyCustomActivity {
         buttonselleraddfood.setVisibility(View.GONE);
         buttonsellerupdatelocation.setVisibility(View.GONE);
         buttonsellerviewmyfoodmenu.setVisibility(View.GONE);
+        buttonbroadcast.setVisibility(View.GONE);
     }
 
     private void hideButtonsForSeller() {
@@ -158,6 +162,11 @@ public class ActivityMain extends MyCustomActivity {
         startActivity(i);
     }
 
+    private void gotoBroadcastPage(){
+        Intent i = new Intent(context, ActivityMsgBroadcast.class);
+        startActivity(i);
+    }
+
     private class Listener implements View.OnClickListener, FusedLocationDataInterface, InterfaceCustomHTTP {
 
         @Override
@@ -176,6 +185,9 @@ public class ActivityMain extends MyCustomActivity {
             }
             if(v==buttonallviewlistfood){
                 viewAllFood();
+            }
+            if(v==buttonbroadcast){
+                gotoBroadcastPage();
             }
 //            Button buttonsellerupdatelocation;
 //            Button buttonselleraddfood;

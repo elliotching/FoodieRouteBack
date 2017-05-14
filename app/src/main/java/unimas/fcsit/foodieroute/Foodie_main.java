@@ -176,8 +176,8 @@ public class Foodie_main extends MyCustomActivity {
             startActivity(intent);
             return null;
         } else if (position == 4) {
-            Intent intent = new Intent(context, ActivityPostHTTPDataFirebaseTest.class);
-            startActivity(intent);
+//            Intent intent = new Intent(context, ActivityPostHTTPDataFirebaseTest.class);
+//            startActivity(intent);
             return null;
         }else if (position == 5) {
             Intent intent = new Intent(context, ActivitySetting.class);

@@ -82,6 +82,7 @@ public class ActivityAddFood extends MyCustomActivity {
             linearLayoutFoodLocation.setVisibility(View.GONE);
         } else {
             isSeller = false;
+            activity.getSupportActionBar().setTitle(R.string.s_title_toolbar_share_food);
         }
 
 

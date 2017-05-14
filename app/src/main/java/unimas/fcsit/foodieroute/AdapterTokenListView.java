@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,12 +12,12 @@ import java.util.ArrayList;
 /**
  * Created by Elliot on 19-Aug-16.
  */
-class AdapterTokenListViewElliot extends BaseAdapter {
+class AdapterTokenListView extends BaseAdapter {
 
     Context context;
-    ArrayList<ObjectToken> data;
+    ArrayList<TokenListObject> data;
 
-    public AdapterTokenListViewElliot(Context context, ArrayList<ObjectToken> data) {
+    public AdapterTokenListView(Context context, ArrayList<TokenListObject> data) {
         this.data = data;
         this.context = context;
     }
@@ -46,22 +45,22 @@ class AdapterTokenListViewElliot extends BaseAdapter {
 
         if (view == null) {
             holder = new ItemHolder();
-            view = LayoutInflater.from(context).inflate(R.layout.list_view_single_item_layout_activity_firebase_test, null);
-            holder.textUser = (TextView) view.findViewById(R.id.text_view_username);
-
+            view = LayoutInflater.from(context).inflate(R.layout.list_view_single_token, null);
+            holder.textUser = (TextView) view.findViewById(R.id.text_username);
+            holder.textToken = (TextView) view.findViewById(R.id.text_token);
             view.setTag(holder);
         } else {
             holder = (ItemHolder) view.getTag();
         }
 
         holder.textUser.setText(data.get(position).username);
-
+        holder.textToken.setText(data.get(position).token);
         return view;
     }
 
     private class ItemHolder {
         TextView textUser;
-
+        TextView textToken;
     }
 }
 //        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

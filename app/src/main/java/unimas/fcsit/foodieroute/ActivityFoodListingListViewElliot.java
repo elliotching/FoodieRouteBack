@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -59,6 +60,8 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
         changeMenu(false, true, false, false, true);
         listView = (ListView) findViewById(R.id.m_list_view);
 
+        Log.d("FoodListing", "Context = " + context + "\n Activity.class = " + ActivityFoodListingListViewElliot.class + "this = "+ this);
+
         buttonsharedbycustomer = (Button) findViewById(R.id.button_sharedbycustomer);
         buttonfoodmenulist = (Button) findViewById(R.id.button_foodmenu);
 
@@ -70,9 +73,6 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
         listView.setOnItemClickListener(allListener);
 
         locationTracker = new FusedLocationTracker(context, allListener);
-
-
-
 
         getAllFoodUser();
     }
@@ -164,6 +164,11 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
                 getAllFoodSeller();
             }
         }
+    }
+
+    private void openSearchView(){
+//        LinearLayout linearLayoutButtons = ;
+//        LinearLayout linearLayoutSearch = ;
     }
 
     private void onCompleteGetFoodDoArrayList(String result, String user_or_seller) {

@@ -80,7 +80,13 @@
     <string name="s_hint_commentdescription">Leave your comment or description here&#8230;</string>
     <string name="s_hint_shopname">Shop name (eg. John\'s Burger)</string>
     <string name="s_hint_menufooddescription">Additional description for this food. (Optional)</string>
-    <!--<string name="s_hint_changepassword_new_confirm">Confirm new password</string>-->
+    <string name="s_hint_yourmsg">Enter your broadcasting message here&#x2026;</string>
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
+    <!--<string name="s_hint_yourmsg">Confirm new password</string>-->
 
 
     <!--Label(TextView)-->
@@ -151,7 +157,7 @@
     <string name="s_button_viewfoodlist">View all food list</string>
     <string name="s_text_gettingyourlocation">Getting your location&#x2026;</string>
     <string name="s_text_savingyourlocation">Saving your current location</string>
-    <!--<string name="s_button_postbyseller">Food menu</string>-->
+    <string name="s_button_broadcast">Broadcast message</string>
     <!--<string name="s_button_postbyseller">Food menu</string>-->
     <!--<string name="s_button_postbyseller">Food menu</string>-->
     <!--<string name="s_button_postbyseller">Food menu</string>-->
@@ -208,7 +214,7 @@
     <string name="s_prgdialog_log_out">Logging out&#8230;</string>
     <string name="s_prgdialog_getting_location">Getting user\'s location&#8230;</string>
     <string name="s_prgdialog_checking_version">Checking version&#8230;</string>
-    <!--<string name="s_prgdialog_submitting_password">Submitting password change&#8230;</string>-->
+    <string name="s_prgdialog_msg_gettingalluserstoken">Retrieving all users&#8230;</string>
     <!--<string name="s_prgdialog_submitting_password">Submitting password change&#8230;</string>-->
     <!--<string name="s_prgdialog_submitting_password">Submitting password change&#8230;</string>-->
     <!--<string name="s_prgdialog_submitting_password">Submitting password change&#8230;</string>-->
@@ -228,7 +234,7 @@
     <string name="s_prgdialog_title_log_out">Log Out</string>
     <string name="s_prgdialog_title_location">Location</string>
     <string name="s_prgdialog_title_update">Update</string>
-    <!--<string name="s_prgdialog_"></string>-->
+    <string name="s_prgdialog_title_retrieve">Retrieve</string>
     <!--<string name="s_prgdialog_"></string>-->
     <!--<string name="s_prgdialog_"></string>-->
     <!--<string name="s_prgdialog_"></string>-->

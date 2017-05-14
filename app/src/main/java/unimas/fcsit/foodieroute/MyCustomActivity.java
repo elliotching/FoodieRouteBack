@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -116,8 +117,26 @@ class MyCustomActivity extends AppCompatActivity {
     }
 
 
+    void backButtonPressed(){
+        this.finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Build.VERSION.SDK_INT > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+
+            backButtonPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 
+    /*    OPTIONS MENU    */
+    /*    OPTIONS MENU    */
+    /*    OPTIONS MENU    */
     private boolean showAddFood = false;
     private boolean showSettings = false;
     private boolean showUsername = false;
@@ -167,27 +186,6 @@ class MyCustomActivity extends AppCompatActivity {
         changeMenu(showAddFood, showUsername, showSettings, logout);
     }
 
-    void backButtonPressed(){
-        this.finish();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Build.VERSION.SDK_INT > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-
-            backButtonPressed();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -197,7 +195,6 @@ class MyCustomActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
 
         if (item == menuAddFood) {
             Intent intent = new Intent(this, ActivityAddFood.class);
@@ -437,6 +434,7 @@ class MyCustomActivity extends AppCompatActivity {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(i);
     }
+
 }
 
 

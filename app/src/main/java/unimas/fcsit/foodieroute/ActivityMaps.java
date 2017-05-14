@@ -50,6 +50,9 @@ public class ActivityMaps extends MyCustomActivity {
 
     private Listener listener;
 
+    private boolean viewmaponly = false;
+    private double[] viewingFoodlocation = null;
+
     private final static int mapZoomLevel = 18;
 
     boolean useMyCurrentLocation = true;
@@ -75,33 +78,21 @@ public class ActivityMaps extends MyCustomActivity {
 
         checkIsViewOnlyOrToChooseLocation(savedInstanceState);
 
-
-
-
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReady());
+        mapView.onResume();
     }
 
     private void checkIsViewOnlyOrToChooseLocation(Bundle savedInstanceState) {
         Intent i = getIntent();
         if(i != null){
-            boolean viewmaponly = i.getBooleanExtra(ResFR.BUNDLE_KEY_VIEW_MAP_ONLY, false);
-            double[] location = i.getDoubleArrayExtra(ResFR.BUNDLE_KEY_MAP_LOCATION);
-            if(viewmaponly && location != null){
+            viewmaponly = i.getBooleanExtra(ResFR.BUNDLE_KEY_VIEW_MAP_ONLY, false);
+            viewingFoodlocation = i.getDoubleArrayExtra(ResFR.BUNDLE_KEY_MAP_LOCATION);
+            if(viewmaponly && viewingFoodlocation != null){
                 buttonSaveLocation.setVisibility(View.GONE);
                 checkBoxAutoMyLoc.setVisibility(View.GONE);
-
-
-
-                mapView = (MapView) findViewById(R.id.mapView);
-                mapView.onCreate(savedInstanceState);
-                mapView.onResume();
-                shiftMarkerToSpecificLocation(location);
             }
-        }
-        else{
-            mapView = (MapView) findViewById(R.id.mapView);
-            mapView.onCreate(savedInstanceState);
-            mapView.getMapAsync(new OnMapReady());
-            mapView.onResume();
         }
     }
 
@@ -175,38 +166,44 @@ public class ActivityMaps extends MyCustomActivity {
             googleMap.setOnMapClickListener(listener);
 
 
-            // if device OS SDK >= 23 (Marshmallow)
-            if (Build.VERSION.SDK_INT >= 23) {
-                //IF Location Permission already granted
-                if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-                    fusedLocationDataInterface = listener;
-                    fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
-                    dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
-                    // enable button + cursor of "MyLocation" on top right corner
-                    googleMap.setMyLocationEnabled(true);
-                } else {
-                    // Request Location Permission
-                    checkLocationPermission();
+            if(viewmaponly){
+                shiftMarkerToSpecificLocation(viewingFoodlocation);
+
+            }else {
+
+                // if device OS SDK >= 23 (Marshmallow)
+                if (Build.VERSION.SDK_INT >= 23) {
+                    //IF Location Permission already granted
+                    if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+                        fusedLocationDataInterface = listener;
+                        fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
+                        dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
+                        // enable button + cursor of "MyLocation" on top right corner
+                        googleMap.setMyLocationEnabled(true);
+                    } else {
+                        // Request Location Permission
+                        checkLocationPermission();
+                    }
                 }
-            }
-            // else if device OS is version 5 Lollipop and below ( <= SDK_22 )
-            else {
-                // check location here
-                if (checkLocationPermission_v22()) {
-                    fusedLocationDataInterface = listener;
-                    fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
-                    dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
-                    // enable button + cursor of "MyLocation" on top right corner
-                    googleMap.setMyLocationEnabled(true);
-                } else {
-                    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            activity.finish();
-                        }
-                    };
-                    String StringWarningLocationNotGranted = ResFR.string(context, s_dialog_msg_location_not_granted);
-                    new Dialog_AlertNotice(context, "Location", StringWarningLocationNotGranted).setPositiveKey("OK", onClickListener);
+                // else if device OS is version 5 Lollipop and below ( <= SDK_22 )
+                else {
+                    // check location here
+                    if (checkLocationPermission_v22()) {
+                        fusedLocationDataInterface = listener;
+                        fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
+                        dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
+                        // enable button + cursor of "MyLocation" on top right corner
+                        googleMap.setMyLocationEnabled(true);
+                    } else {
+                        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                activity.finish();
+                            }
+                        };
+                        String StringWarningLocationNotGranted = ResFR.string(context, s_dialog_msg_location_not_granted);
+                        new Dialog_AlertNotice(context, "Location", StringWarningLocationNotGranted).setPositiveKey("OK", onClickListener);
+                    }
                 }
             }
         }
@@ -254,7 +251,6 @@ public class ActivityMaps extends MyCustomActivity {
     void backButtonPressed() {
         super.onPause();
         mapView.onPause();
-        fusedLocationTracker.stopLocationUpdates();
         super.backButtonPressed();
     }
 }
