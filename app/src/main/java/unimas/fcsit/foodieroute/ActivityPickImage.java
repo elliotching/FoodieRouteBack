@@ -192,7 +192,7 @@ public class ActivityPickImage extends MyCustomActivity {
 //                    getApplicationContext(),
 //                    "You must select image from gallery before you try to upload",
 //                    Toast.LENGTH_LONG).show();
-            new Dialog_AlertNotice(context, "Notice", "You must select an image before you save / confirm.")
+            new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_selectanimage)
                     .setPositiveKey(R.string.s_dialog_btn_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

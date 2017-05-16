@@ -202,7 +202,7 @@ public class ActivityMaps extends MyCustomActivity {
                             }
                         };
                         String StringWarningLocationNotGranted = ResFR.string(context, s_dialog_msg_location_not_granted);
-                        new Dialog_AlertNotice(context, "Location", StringWarningLocationNotGranted).setPositiveKey("OK", onClickListener);
+                        new Dialog_AlertNotice(context, R.string.s_prgdialog_title_location, StringWarningLocationNotGranted).setPositiveKey(R.string.s_dialog_btn_ok, onClickListener);
                     }
                 }
             }

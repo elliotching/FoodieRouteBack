@@ -171,7 +171,7 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
 //        LinearLayout linearLayoutSearch = ;
     }
 
-    private void onCompleteGetFoodDoArrayList(String result, String user_or_seller) {
+    private void onCompleteGetFoodDoArrayList(String result, String get_menu_user_or_seller) {
         if (isJSONArray(result)) {
             try {
 
@@ -198,13 +198,15 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
                     String time = datetime[1];
                     date_time = date + " " + time;
 
-                    if(user_or_seller.equals(USER)) {
+                    // Filter the food is from Seller OR User!!!
+                    // when user clicked button "shared from customer" show oonly user shared for eg..
+                    if(get_menu_user_or_seller.equals(USER)) {
                         if (is_seller.equals("0")) {
                             FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
                             food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);
                             foodArray.add(food);
                         }
-                    }else if(user_or_seller.equals(SELLER)){
+                    }else if(get_menu_user_or_seller.equals(SELLER)){
                         if (is_seller.equals("1") || is_seller.equals("2")) {
                             FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, "");
                             food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);

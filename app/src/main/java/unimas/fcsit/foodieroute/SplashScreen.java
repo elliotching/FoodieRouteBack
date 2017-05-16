@@ -27,15 +27,7 @@ public class SplashScreen extends AppCompatActivity {
     boolean tokenSuccess = false;
 
     public void onCreate(Bundle ins) {
-        Resources res = context.getResources();
-// Change locale settings in the app.
-        String lg = Locale.getDefault().toString();
-        Log.d("language", lg);
-        DisplayMetrics dm = res.getDisplayMetrics();
-        android.content.res.Configuration conf = res.getConfiguration();
-        conf.locale = (new Locale(lg)); // API 17+ only.
-// Use conf.locale = new Locale(...) if targeting lower versions
-        res.updateConfiguration(conf, dm);
+        updateLang();
 
         super.onCreate(ins);
 
@@ -55,6 +47,23 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
+    }
+
+    void updateLang(){
+        Resources res = context.getResources();
+        String appLang = ResFR.getPrefString(context, ResFR.LANGUAGE);
+// Change locale settings in the app.
+
+        if(appLang.equals(ResFR.DEFAULT_EMPTY)) {
+            appLang = Locale.getDefault().getLanguage();
+            Log.d("lg", "updateLang: "+appLang);
+        }
+        Log.d("language", appLang);
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = (new Locale(appLang)); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
     }
 
     private void getFirebaseToken( String deviceUUID, String device) {

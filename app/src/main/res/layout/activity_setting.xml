@@ -11,58 +11,105 @@
         style="@style/toolbar_style"
         app:title="@string/s_title_toolbar_activity_setting" />
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/d_margin_padding_20"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/s_label_setting_theme_activity_setting"
-            android:layout_marginBottom="@dimen/d_margin_for_text_view"
-            android:textSize="@dimen/d_text_size_medium" />
+            android:orientation="vertical"
+            android:padding="@dimen/d_margin_padding_20">
 
-        <RadioGroup
-            android:id="@+id/radiogrp_theme_activity_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/d_margin_padding_20">
 
-            <RadioButton
-                android:id="@+id/radiobutton_theme_light_activity_setting"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/s_label_setting_theme_activity_setting"
+                    android:textSize="@dimen/d_text_size_medium" />
+
+                <RadioGroup
+                    android:id="@+id/radiogrp_theme_activity_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/radiobutton_theme_light_activity_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/s_light_theme_activity_setting"
+                        android:textSize="@dimen/d_text_size_medium" />
+
+                    <RadioButton
+                        android:id="@+id/radiobutton_theme_dark_activity_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/s_dark_theme_activity_setting"
+                        android:textSize="@dimen/d_text_size_medium" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/colorPrimary" />
+
+
+            <Button
+                android:id="@+id/button_change_password"
+                style="@style/style_for_default_button_and_text_size_no_theme"
+                android:layout_margin="@dimen/d_margin_padding_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/s_light_theme_activity_setting"
-                android:textSize="@dimen/d_text_size_medium" />
+                android:text="@string/s_button_change_password" />
 
-            <RadioButton
-                android:id="@+id/radiobutton_theme_dark_activity_setting"
-                android:layout_width="wrap_content"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?attr/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/s_dark_theme_activity_setting"
-                android:textSize="@dimen/d_text_size_medium" />
+                android:orientation="vertical"
+                android:layout_margin="@dimen/d_margin_padding_20">
 
-        </RadioGroup>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/s_changelanguage"
+                    android:textSize="@dimen/d_text_size_medium"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/d_margin_padding_20"/>
+                <Button
+                    android:id="@+id/button_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/s_system"
+                    android:textSize="@dimen/d_text_size_medium"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/d_margin_padding_20"/>
+                <Button
+                    android:id="@+id/button_english"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/s_english"
+                    android:textSize="@dimen/d_text_size_medium"/>
 
-        <Button
-            android:id="@+id/button_change_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/style_for_default_button_and_text_size_no_theme"
-            android:text="@string/s_button_change_password"/>
+                <Button
+                    android:id="@+id/button_chinese"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/s_chinese"
+                    android:textSize="@dimen/d_text_size_medium"/>
 
-    </LinearLayout>
-
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

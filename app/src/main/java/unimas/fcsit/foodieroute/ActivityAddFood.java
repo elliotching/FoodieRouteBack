@@ -327,7 +327,7 @@ public class ActivityAddFood extends MyCustomActivity {
     }
 
     private void showDialogError(String result) {
-        new Dialog_AlertNotice(context, "Error", result).setPositiveKey(R.string.s_dialog_btn_ok, null);
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_error, result).setPositiveKey(R.string.s_dialog_btn_ok, null);
     }
 
     private void showDialogSuccess() {

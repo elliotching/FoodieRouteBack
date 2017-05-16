@@ -96,7 +96,7 @@ public class ActivitySignUp extends MyCustomActivity {
 
 
     void showWarning() {
-        new Dialog_AlertNotice(context, "Error", "Please fill in all fields.").setPositiveKey("OK", null);
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_error, R.string.s_dialog_msg_plsfillall).setPositiveKey(R.string.s_dialog_btn_ok, null);
     }
 
     void doSubmit() {

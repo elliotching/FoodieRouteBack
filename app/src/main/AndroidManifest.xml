@@ -99,6 +99,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ActivityFoodMenu" />
         <activity android:name=".ActivityMsgBroadcast" />
+        <activity android:name=".ActivitySearch" />
 
         <service
             android:name=".ServiceAndroidFirebaseMessagingElliot">

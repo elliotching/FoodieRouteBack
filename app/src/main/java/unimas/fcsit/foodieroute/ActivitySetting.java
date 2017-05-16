@@ -25,6 +25,9 @@ public class ActivitySetting extends MyCustomActivity {
     RadioButton radioLight;
     RadioButton radioDark;
     Button buttonChangePassword;
+    Button buttonEnglish;
+    Button buttonChinese;
+    Button buttonSystem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,15 @@ public class ActivitySetting extends MyCustomActivity {
 
     private void initUIsetup(){
 
-
+        buttonEnglish = (Button) findViewById(R.id.button_english);
+        buttonChinese = (Button) findViewById(R.id.button_chinese);
+        buttonSystem = (Button) findViewById(R.id.button_system);
         buttonChangePassword = (Button) findViewById(R.id.button_change_password);
         radioGroup = (RadioGroup) findViewById(R.id.radiogrp_theme_activity_setting);
         radioLight = (RadioButton) findViewById(R.id.radiobutton_theme_light_activity_setting);
         radioDark = (RadioButton) findViewById(R.id.radiobutton_theme_dark_activity_setting);
+
+        OnClick listener = new OnClick();
 
         SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
         String theme = pref.getString(ResFR.THEME,"Light");
@@ -53,6 +60,9 @@ public class ActivitySetting extends MyCustomActivity {
 
         buttonChangePassword.setOnClickListener(new OnClick());
 
+        buttonEnglish.setOnClickListener(listener);
+        buttonChinese.setOnClickListener(listener);
+        buttonSystem.setOnClickListener(listener);
     }
 
     private class OnClick implements View.OnClickListener{
@@ -82,7 +92,31 @@ public class ActivitySetting extends MyCustomActivity {
                 Intent intent = new Intent(context, ActivityChangePassword.class);
                 activity.startActivity(intent);
             }
+
+            if(view == buttonEnglish){
+                ResFR.setPrefString(context, ResFR.LANGUAGE, ResFR.ENGLISH);
+                updateLang();
+                restartThis();
+            }
+
+            if(view == buttonChinese){
+                ResFR.setPrefString(context, ResFR.LANGUAGE, ResFR.CHINESE);
+                updateLang();
+                restartThis();
+            }
+
+            if(view == buttonSystem){
+                ResFR.setPrefString(context, ResFR.LANGUAGE, ResFR.DEFAULT_EMPTY);
+                updateLang();
+                restartThis();
+            }
         }
+    }
+
+    private void restartThis(){
+        Intent intent = new Intent(context, ActivitySetting.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     @Override

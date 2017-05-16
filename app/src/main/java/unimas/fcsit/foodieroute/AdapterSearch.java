@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by Elliot on 19-Aug-16.
  */
-class AdapterFoodListingListViewElliot extends BaseAdapter {
+class AdapterSearch extends BaseAdapter {
 
     private Context context;
     private ArrayList<FoodListingObject> data;
@@ -26,7 +26,7 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
 
     static double[] myLocation = new double[]{-Double.MAX_VALUE , -Double.MAX_VALUE};
 
-    public AdapterFoodListingListViewElliot(Context context, ArrayList<FoodListingObject> data) {
+    public AdapterSearch(Context context, ArrayList<FoodListingObject> data) {
         this.data = data;
         this.context = context;
     }
@@ -103,6 +103,17 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         price = price.replace("$money$", priceDS);
         holder.textFoodPrice.setText(price);
 
+        holder.textDistance.setText(data.get(position).distanceString);
+
+        // load image from web.
+        String imgURL = url_read_image + data.get(position).image_file_name;
+
+        Ion.with(context)
+                .load(imgURL)
+                .withBitmap()
+                .placeholder(R.mipmap.ic_loading)
+                .intoImageView(holder.imageView);
+
         if(data.get(position).is_seller.equals("0")) {
             /* username who posted/shared this food */
             String poster = ResFR.string(context, R.string.s_listview_username);
@@ -115,16 +126,7 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
             holder.textFoodComment.setText(comment);
         }
 
-        holder.textDistance.setText(data.get(position).distanceString);
 
-        // load image from web.
-        String imgURL = url_read_image + data.get(position).image_file_name;
-
-        Ion.with(context)
-                .load(imgURL)
-                .withBitmap()
-                .placeholder(R.mipmap.ic_loading)
-                .intoImageView(holder.imageView);
 
         return view;
     }

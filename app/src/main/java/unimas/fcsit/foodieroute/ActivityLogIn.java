@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -168,7 +169,7 @@ public class ActivityLogIn extends MyCustomActivity {
 
         if (username_email.matches("") || password.matches("")) {
             progLogIn.dismiss();
-            new Dialog_AlertNotice(context, "Error", "Please fill in all fields.").setPositiveKey("OK", null);
+            new Dialog_AlertNotice(context, R.string.s_dialog_title_error, R.string.s_dialog_msg_plsfillall).setPositiveKey(R.string.s_dialog_btn_ok, null);
         } else {
 
             String deviceUUID = ResFR.getPrefString(context, ResFR.DEVICEUUID);
@@ -254,6 +255,7 @@ public class ActivityLogIn extends MyCustomActivity {
                 dialog.dismiss();
                 String code = editTextActiveationCode.getText().toString();
                 validateActivationCode(code);
+
             }
             return false;
         }
@@ -412,15 +414,23 @@ public class ActivityLogIn extends MyCustomActivity {
                                 createDialogForAccountActivation();
 
                             }
-                            if (log_out.equals("1")) {
 
-                                // BEEN LOGGED OUT
-                                ResFR.setPrefString(context, ResFR.USERNAME, ResFR.DEFAULT_EMPTY);
-                                ResFR.setPrefString(context, ResFR.EMAIL, ResFR.DEFAULT_EMPTY);
-                                restartAtLogIn();
+                        } else if (log_out.equals("1")) {
 
-                            }
-                        } else {
+                            // BEEN LOGGED OUT
+                            ResFR.setPrefString(context, ResFR.USERNAME, ResFR.DEFAULT_EMPTY);
+                            ResFR.setPrefString(context, ResFR.EMAIL, ResFR.DEFAULT_EMPTY);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean(ResFR.BUNDLE_KEY_KICKED_OUT, true);
+
+                            Intent ii = new Intent(context, ActivityLogIn.class);
+                            ii.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            ii.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                            ii.putExtras(bundle);
+
+                            startActivity(ii);
+
+                        }else{
                             showDialogPhpError(result);
                         }
 

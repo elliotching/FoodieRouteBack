@@ -19,6 +19,11 @@ class ResFR {
     private static final String APP_IS_ACTIVE = "FR_app_is_active";
     static final String PREF_NAME = "FoodieRoute";
     static final String DEVICEUUID = "FR_deviceUUID";
+    static final String LANGUAGE = "FR_lang";
+
+    static final String ENGLISH = "en";
+    static final String CHINESE = "zh";
+    static final String KOREAN = "ko";
     static final String THEME = "FR_theme";
     static final String TOKEN = "FR_token";
     static final String USERNAME = "FR_username";
@@ -69,6 +74,7 @@ class ResFR {
     static final String URL_log_out = "http://foodlocator.com.my/mobile/log_out.php";
     static final String URL_update_seller_location = "http://foodlocator.com.my/mobile/update_seller_location.php";
     static final String URL_get_all_token = "http://foodlocator.com.my/mobile/get_all_token.php";
+    static final String URL_search = "http://foodlocator.com.my/mobile/search.php";
 
 
     ResFR(Context c){

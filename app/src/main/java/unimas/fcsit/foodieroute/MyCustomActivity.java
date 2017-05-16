@@ -2,12 +2,14 @@ package unimas.fcsit.foodieroute;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -134,9 +138,9 @@ class MyCustomActivity extends AppCompatActivity {
     }
 
 
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
+    /*    OPTIONS MENU >>>    */
+    /*    OPTIONS MENU >>>    */
+    /*    OPTIONS MENU >>>    */
     private boolean showAddFood = false;
     private boolean showSettings = false;
     private boolean showUsername = false;
@@ -214,7 +218,7 @@ class MyCustomActivity extends AppCompatActivity {
             return true;
         }
         if(item == menuSearch){
-            //
+            gotoSearchPage();
             return true;
         }
         if(item.getItemId() == android.R.id.home){
@@ -223,9 +227,15 @@ class MyCustomActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
-    /*    OPTIONS MENU    */
+    /*    <<< OPTIONS MENU    */
+    /*    <<< OPTIONS MENU    */
+    /*    <<< OPTIONS MENU    */
+
+
+    private void gotoSearchPage() {
+        Intent i = new Intent(context, ActivitySearch.class);
+        startActivity(i);
+    }
 
     void doLogout(){
         final Dialog_Progress p = new Dialog_Progress(activity, R.string.s_prgdialog_title_log_out, R.string.s_prgdialog_log_out, false);
@@ -433,6 +443,22 @@ class MyCustomActivity extends AppCompatActivity {
         activity.finish();
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(i);
+    }
+
+    void updateLang(){
+        Resources res = context.getResources();
+        String appLang = ResFR.getPrefString(context, ResFR.LANGUAGE);
+// Change locale settings in the app.
+
+        if(appLang.equals(ResFR.DEFAULT_EMPTY)) {
+            appLang = Locale.getDefault().toString();
+        }
+        Log.d("language", appLang);
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = (new Locale(appLang)); // API 17+ only.
+// Use conf.locale = new Locale(...) if targeting lower versions
+        res.updateConfiguration(conf, dm);
     }
 
 }
