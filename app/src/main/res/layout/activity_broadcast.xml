@@ -19,12 +19,12 @@
         android:hint="@string/s_hint_yourmsg"
         android:inputType="textMultiLine"
         android:textSize="@dimen/d_text_size_medium" />
-
+    <!--Broadcast a message-->
     <Button
         android:id="@+id/send_braodcast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Broadcast a message"
+        android:text="@string/s_button_startbroadcastmessage"
         style="@style/style_for_default_button_and_text_size_no_theme"/>
 
     <ListView

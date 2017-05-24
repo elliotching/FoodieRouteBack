@@ -13,11 +13,11 @@
     <string name="s_student">Student</string>
 
     <!--Nav. Drawer Items' Names-->
-    <string name="s_item1">Main</string>
-    <string name="s_item2_map">Map</string>
-    <string name="s_item3_rec_view">Food Listing</string>
-    <string name="s_item4_dev">For Developer</string>
-    <string name="s_item5_loadimage">Developer: Firebase Cloud Messanging (Broadcast)</string>
+    <string name="s_item1">主页</string>
+    <string name="s_item2_map">地图</string>
+    <string name="s_item3_rec_view">食物列表</string>
+    <string name="s_item4_dev">给 程序员</string>
+    <string name="s_item5_loadimage">开发人员: Firebase Cloud Messanging (Broadcast)</string>
     <string name="s_item6_setting">设置</string>
     <!--<string name="s_menu_search_food">Settings</string>-->
     <!--<string name="s_item6_setting">Settings</string>-->
@@ -161,7 +161,7 @@
     <string name="s_dialog_msg_failedconnect">连接失败</string>
     <string name="s_dialog_msg_connection_not_found">连接未寻获</string>
     <string name="s_dialog_msg_yoursellerlocationempty">您目前的位置未输入。请先定义您的目前位置。</string>
-    <string name="s_dialog_msg_newupdateavailable">新版本的 FoodieRoute 已推出。</string>
+    <string name="s_dialog_msg_newupdateavailable">新版本的 FoodieRoute 已推出。请前往\nfoodlocator.com.my 下载。</string>
     <string name="s_dialog_msg_plsfillall">请填写全部格子</string>
     <string name="s_dialog_msg_selectanimage">您必须选择一张图片才能储存</string>
     <!--<string name="s_dialog_msg_plsfillall">You must select an image before you save / confirm.</string>-->
@@ -225,5 +225,28 @@
     <!--<string name="s_menu_log_out">Log out</string>-->
     <!--<string name="s_menu_log_out">Log out</string>-->
 
+    <!--****************************************************************-->
 
+    <string name="s_changelanguage">更换语言</string>
+    <string name="s_english">英文(English)</string>
+    <string name="s_chinese">中文</string>
+    <string name="s_system">使用系统语言 Using system language</string>
+    <string name="s_button_foodetail_getdirection">导航/帮我带路</string>
+    <string name="s_dialog_msg_menuisempty">您的菜单空白。请添加新食物。</string>
+
+
+
+    <string name="s_dialog_title_delete">删除</string>
+    <string name="s_dialog_msg_confirmdelete">您确定要删除此食物？</string>
+    <string name="s_prgdialog_deleting_food">正在删除中&#8230;</string>
+    <string name="s_deletethisfood">删除</string>
+    <string name="s_button_startbroadcastmessage">发送群发信息</string>
+    <string name="s_button_sendingbroadcast">正发送中&#8230;</string>
+    <string name="s_button_viewfoodsishared">查看我分享过的食物</string>
+
+
+    <!--************************************************************-->
+
+    <string name="s_button_removemylocation">移除我的位置记录</string>
+    <string name="s_deletelocationsuccess">位置记录已移除</string>
 </resources>

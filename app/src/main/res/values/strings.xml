@@ -161,7 +161,7 @@
     <string name="s_dialog_msg_failedconnect">Failed to connect.</string>
     <string name="s_dialog_msg_connection_not_found">Connection not found.</string>
     <string name="s_dialog_msg_yoursellerlocationempty">Your current location for selling food is not set. Please update your current location first.</string>
-    <string name="s_dialog_msg_newupdateavailable">New version of FoodieRoute is available.</string>
+    <string name="s_dialog_msg_newupdateavailable">New version of FoodieRoute is available. Please download at\nfoodlocator.com.my</string>
     <string name="s_dialog_msg_plsfillall">Please fill in all fields.</string>
     <string name="s_dialog_msg_selectanimage">You must select an image before you save / confirm.</string>
     <!--<string name="s_dialog_msg_plsfillall">You must select an image before you save / confirm.</string>-->
@@ -232,17 +232,23 @@
     <string name="s_english">English</string>
     <string name="s_chinese">Chinese</string>
     <string name="s_system">Using system language</string>
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
+    <string name="s_button_foodetail_getdirection">Get Direction</string>
+    <string name="s_dialog_msg_menuisempty">Your menu is empty. Please add a new food.</string>
+
+
+    <string name="s_dialog_title_delete">Delete</string>
+    <string name="s_dialog_msg_confirmdelete">Are you sure to delete this food?</string>
+    <string name="s_prgdialog_deleting_food">Deleting this food&#8230;</string>
+    <string name="s_deletethisfood">Delete</string>
+    <string name="s_button_startbroadcastmessage">Start broadcast messages.</string>
+    <string name="s_button_sendingbroadcast">Sending&#8230;</string>
+    <string name="s_button_viewfoodsishared">View foods I\'ve shared.</string>
+
+
+
+    <!--************************************************************-->
+    <string name="s_button_removemylocation">Remove my location</string>
+    <string name="s_deletelocationsuccess">Location deleted.</string>
     <!--<string name="s_changelanguage">Log out</string>-->
     <!--<string name="s_changelanguage">Log out</string>-->
     <!--<string name="s_changelanguage">Log out</string>-->

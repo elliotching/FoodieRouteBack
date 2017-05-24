@@ -1,6 +1,7 @@
 package unimas.fcsit.foodieroute;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.location.LocationManager;
@@ -370,7 +371,7 @@ class MyCustomActivity extends AppCompatActivity {
         double lng = food.lng;
         String distanceString = ResFR.string(context, R.string.s_listview_fooddistance_away);
         String locationunknown = ResFR.string(context, R.string.s_label_locationunknown);
-        double distanceValueMeterDouble = -1.0;
+        double distanceValueMeterDouble = ResFR.DEFAULT_EMPTY_LOCATION;
         if (mylat > 90.0 || mylat < -90.0 || mylng > 180.0 || mylng < -180.0 ||
                 lat > 90.0 || lat < -90.0 || lng > 180.0 || lng < -180.0) {
             distanceString = locationunknown;
@@ -384,6 +385,7 @@ class MyCustomActivity extends AppCompatActivity {
             }else{
                 String value_unit = stringOf0dec(distance.value) + " " + "meter";
                 distanceString = distanceString.replace("$distance_meter$", value_unit);
+                distanceValueMeterDouble = distance.valueInMeter;
             }
         }
 
@@ -431,10 +433,16 @@ class MyCustomActivity extends AppCompatActivity {
     }
 
     boolean isLocationEmpty(double[] mycurrentlocation){
-        if(mycurrentlocation[0] < ResFR.CHECK_EMPTY_LOCATION || mycurrentlocation[1] < ResFR.CHECK_EMPTY_LOCATION){
-            return true;
+        Log.d(TAG, "checkingCurrentLocation = "+mycurrentlocation[0]+" , "+mycurrentlocation[1]);
+        Log.d(TAG, "CHECK_EMPTY_LOCATION = "+ResFR.CHECK_EMPTY_LOCATION);
+        if(mycurrentlocation[0] > ResFR.CHECK_EMPTY_LOCATION || mycurrentlocation[1] > ResFR.CHECK_EMPTY_LOCATION){
+
+            Log.d(TAG, "LOCATION IS EMPTY");
+            return true;// Empty
         }else{
-            return false;
+
+            Log.d(TAG, "LOCATION IS NOT EMPTY");
+            return false;// not empty
         }
     }
 
@@ -451,7 +459,7 @@ class MyCustomActivity extends AppCompatActivity {
 // Change locale settings in the app.
 
         if(appLang.equals(ResFR.DEFAULT_EMPTY)) {
-            appLang = Locale.getDefault().toString();
+            appLang = Locale.getDefault().getLanguage();
         }
         Log.d("language", appLang);
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -461,6 +469,22 @@ class MyCustomActivity extends AppCompatActivity {
         res.updateConfiguration(conf, dm);
     }
 
+    double doubleOf(String s){
+        try {
+            return Double.valueOf(s);
+        }catch(Exception e){
+            return ResFR.DEFAULT_EMPTY_LOCATION;
+        }
+    }
+
+    DialogInterface.OnClickListener clickToEndActivity() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                activity.finish();
+            }
+        };
+    }
 }
 
 

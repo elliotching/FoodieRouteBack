@@ -3,6 +3,7 @@ package unimas.fcsit.foodieroute;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class ActivityFoodDetail extends MyCustomActivity {
     TextView textFoodSeller;
     TextView textFoodPrice;
     Button buttonlocateme;
+    Button buttongetdirection;
     private FusedLocationTracker locationTracker;
     private Listener listener;
     static FoodListingObject viewingFood;
@@ -56,9 +58,10 @@ public class ActivityFoodDetail extends MyCustomActivity {
         textFoodPosterUsername = (TextView) findViewById(R.id.text_fooddetail_poster);
         textFoodSeller = (TextView) findViewById(R.id.text_fooddetail_seller);
         buttonlocateme = (Button)findViewById(R.id.button_fooddetail_locateme);
+        buttongetdirection = (Button)findViewById(R.id.button_fooddetail_getdirection);
 
         buttonlocateme.setOnClickListener(listener);
-
+        buttongetdirection.setOnClickListener(listener);
         /* Adjust Image Viewport Size */
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewFoodImage.getLayoutParams();
         Log.d("AdapterImageView", "LinearLayout.LayoutParams params.width = "+params.width);
@@ -92,7 +95,7 @@ public class ActivityFoodDetail extends MyCustomActivity {
 
         /* Price */
         String price = ResFR.string(context, R.string.s_listview_price);
-        double priceD = Double.valueOf(viewingFood.food_price);
+        double priceD = ResFR.doubleOf(viewingFood.food_price);
         String priceDS = String.format("%.2f",priceD);
         price = price.replace("$money$", priceDS);
         textFoodPrice.setText(price);
@@ -128,9 +131,31 @@ public class ActivityFoodDetail extends MyCustomActivity {
         @Override
         public void onClick(View v) {
             if(v==buttonlocateme){
+                if(!isLocationEmpty(new double[]{viewingFood.lat, viewingFood.lng}))
                 gotoActivityMap();
             }
+            if(v==buttongetdirection){
+                if(!isLocationEmpty(new double[]{viewingFood.lat, viewingFood.lng}))
+                getDirectionInGoogleMap();
+            }
         }
+    }
+
+    private void getDirectionInGoogleMap() {
+
+        // Original
+//        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?" +
+//                "saddr="+ viewingFood.lat + "," + viewingFood.lng + "&daddr=" + marker.getPosition().latitude + "," +
+//                marker.getPosition().longitude+ "&sensor=false&units=metric&mode=driving"));
+
+        final Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?" +
+                "daddr=" + viewingFood.lat + "," + viewingFood.lng +
+                "&sensor=false" +
+                        "&units=metric" +
+                        "&mode=driving"));
+        intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+        startActivity(intent);
     }
 
     private void gotoActivityMap() {
@@ -144,5 +169,4 @@ public class ActivityFoodDetail extends MyCustomActivity {
         locationTracker.stopLocationUpdates();
         super.backButtonPressed();
     }
-
 }

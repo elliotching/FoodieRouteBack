@@ -34,7 +34,7 @@ class CustomHTTP extends AsyncTask<String, Void, String>
 
     private String FAIL_CONNECT;
     private String NOT_FOUND;
-
+//    some of the others attributes...
 //    private String CONTENT_TYPE_K = "Content-Type";
 //    private String CONTENT_TYPE_V = "application/json";
 //    private String AUTHORIZATION_K = "Authorization";
@@ -56,6 +56,7 @@ class CustomHTTP extends AsyncTask<String, Void, String>
         FAIL_CONNECT = ResFR.string(context, R.string.s_dialog_msg_failedconnect);
         NOT_FOUND = ResFR.string(context, R.string.s_dialog_msg_connection_not_found);
     }
+    // DO OPEN HTTP CONNECTIONS AND MAKE POST REQUEST etc.
 
     @Override
     protected String doInBackground(String... params) {

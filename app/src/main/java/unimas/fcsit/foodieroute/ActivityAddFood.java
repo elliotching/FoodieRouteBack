@@ -6,6 +6,8 @@ package unimas.fcsit.foodieroute;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +17,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * Created by Elliot on 12-Aug-16.
@@ -40,7 +45,7 @@ public class ActivityAddFood extends MyCustomActivity {
     private EditText editShopname;
     private Button buttonPickImage;
     private Button buttonChosenLocation1;
-
+    private ImageView image_pickedImageView;
     boolean isSeller = false;
 
     private CustomHTTP httpAddFood;
@@ -66,7 +71,7 @@ public class ActivityAddFood extends MyCustomActivity {
         buttonPickImage = (Button) findViewById(R.id.button_pick);
         Button buttonSubmit = (Button) findViewById(R.id.button_submit);
 
-
+        image_pickedImageView = (ImageView) findViewById(R.id.imageview_addfood);
         buttonChosenLocation1 = (Button) findViewById(R.id.button_choose_location);
 
 //        checkBoxMobileSeller = (CheckBox) findViewById(R.id.checkbox_mobile_seller);
@@ -172,6 +177,12 @@ public class ActivityAddFood extends MyCustomActivity {
 //        pickedImage.setLayoutParams(layoutParams);
 //    }
 
+    private void createBitmapDisplayOnImageView(String filepath){
+        File image = new File(filepath);
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+        image_pickedImageView.setImageBitmap(bitmap);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,6 +193,7 @@ public class ActivityAddFood extends MyCustomActivity {
             arrayImage = data.getExtras().getStringArray("filenamearray");
             if (arrayImage != null) {
                 buttonPickImage.setText(arrayImage[1]);
+                createBitmapDisplayOnImageView(arrayImage[0]);
             }
         } else if (requestCode == PICK_IMAGE_CODE) {
             if (arrayImage == null) {

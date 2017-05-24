@@ -19,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Elliot on 19-Aug-16.
@@ -171,6 +173,17 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
 //        LinearLayout linearLayoutSearch = ;
     }
 
+    private ArrayList<FoodListingObject> sortArray(ArrayList<FoodListingObject> lists){
+        Collections.sort(lists, new Comparator<FoodListingObject>() {
+            @Override
+            public int compare(FoodListingObject t2, FoodListingObject t1) {
+                return Double.compare(t2.distanceDouble,t1.distanceDouble);
+            }
+        });
+
+        return lists;
+    }
+
     private void onCompleteGetFoodDoArrayList(String result, String get_menu_user_or_seller) {
         if (isJSONArray(result)) {
             try {
@@ -192,11 +205,7 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
                     String is_seller = json.optString("is_seller");
                     String food_comment = json.optString("food_comment");
 
-                    date_time = date_time.replace("----", "_");
-                    String[] datetime = date_time.split("_");
-                    String date = datetime[0];
-                    String time = datetime[1];
-                    date_time = date + " " + time;
+
 
                     // Filter the food is from Seller OR User!!!
                     // when user clicked button "shared from customer" show oonly user shared for eg..
@@ -241,12 +250,13 @@ public class ActivityFoodListingListViewElliot extends MyCustomActivity {
         for(int i = 0; i < foodArray.size(); i++) {
             updateFoodDistanceStringAndDouble(foodArray.get(i), location.getLatitude(), location.getLongitude());
         }
-
+        sortArray(foodArray);
         listView.invalidateViews();
     }
 
     private void populateList() {
         Log.d(TAG, "List populated. set-up.");
+        sortArray(foodArray);
         adapter = new AdapterFoodListingListViewElliot(context, foodArray);
         listView.setAdapter(adapter);
     }

@@ -175,11 +175,25 @@ public class ActivityMaps extends MyCustomActivity {
                 if (Build.VERSION.SDK_INT >= 23) {
                     //IF Location Permission already granted
                     if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
-                        fusedLocationDataInterface = listener;
-                        fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
-                        dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
-                        // enable button + cursor of "MyLocation" on top right corner
-                        googleMap.setMyLocationEnabled(true);
+
+                        // check again for location v22
+                        if (checkLocationPermission_v22()) {
+                            fusedLocationDataInterface = listener;
+                            fusedLocationTracker = new FusedLocationTracker(context, fusedLocationDataInterface);
+                            dialogProgress_loadLocation = new Dialog_Progress(activity, R.string.s_prgdialog_title_location, R.string.s_prgdialog_getting_location, true);
+                            // enable button + cursor of "MyLocation" on top right corner
+                            googleMap.setMyLocationEnabled(true);
+                        } else {
+                            DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    activity.finish();
+                                }
+                            };
+                            String StringWarningLocationNotGranted = ResFR.string(context, s_dialog_msg_location_not_granted);
+                            new Dialog_AlertNotice(context, R.string.s_prgdialog_title_location, StringWarningLocationNotGranted).setPositiveKey(R.string.s_dialog_btn_ok, onClickListener);
+                        }
+
                     } else {
                         // Request Location Permission
                         checkLocationPermission();

@@ -4,6 +4,7 @@ package unimas.fcsit.foodieroute;
  * Created by Elliot on 19-Aug-16.
  */
 class FoodListingObject {
+    final String date_time_raw;
     final String date_time;
     final String username;
     final String image_file_name;
@@ -17,12 +18,19 @@ class FoodListingObject {
     final double lat;
     final double lng;
     String distanceString = "";
-    double distanceDouble = -1.0;
+    double distanceDouble = ResFR.DEFAULT_EMPTY_LOCATION;
 
 
     FoodListingObject(String date_time, String username, String image_file_name, String food_name, String food_price, String seller_location_lat, String seller_location_lng, String seller_name, String is_seller, String food_comment) {
 
-        this.date_time = date_time;
+        this.date_time_raw = date_time;
+
+        date_time = date_time.replace("----", "_");
+        String[] datetime = date_time.split("_");
+        String date = datetime[0];
+        String time = datetime[1];
+        this.date_time = date + " " + time;
+
         this.username = username;
         this.image_file_name = image_file_name;
         this.food_name = food_name;
@@ -42,7 +50,7 @@ class FoodListingObject {
         try {
             return Double.valueOf(s);
         }catch(Exception e){
-            return -Double.MAX_VALUE;
+            return ResFR.DEFAULT_EMPTY_LOCATION;
         }
     }
 }

@@ -56,30 +56,52 @@
             <!--android:text="Upload"/>-->
 
             <!--Food Image-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="10">-->
+
+            <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="3"-->
+            <!--android:ellipsize="end"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:text="@string/s_label_form_food_image"-->
+            <!--android:textSize="@dimen/d_text_size_medium" />-->
+
+            <!--<Button-->
+            <!--android:id="@+id/button_pick"-->
+            <!--style="@style/style_for_default_button_and_text_size_no_theme"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="7"-->
+            <!--android:ellipsize="end"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="@string/s_button_no_image_choosen" />-->
+            <!--</LinearLayout>-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:text="@string/s_label_form_food_image"
-                    android:textSize="@dimen/d_text_size_medium" />
+                <ImageView
+                    android:id="@+id/imageview_addfood"
+                    android:layout_width="match_parent"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
                     android:id="@+id/button_pick"
                     style="@style/style_for_default_button_and_text_size_no_theme"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7"
-                    android:ellipsize="end"
-                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="@string/s_button_no_image_choosen" />
+
             </LinearLayout>
 
 
@@ -95,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:ellipsize="end"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/s_label_form_food_name_activity_add_food"
                     android:textSize="@dimen/d_text_size_medium" />
 
@@ -104,7 +126,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:textSize="@dimen/d_text_size_medium" />
@@ -122,18 +144,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:ellipsize="end"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/s_label_form_food_price_activity_add_food"
                     android:textSize="@dimen/d_text_size_medium" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="7">
+                    android:layout_weight="7"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:text="RM"
                         android:textSize="@dimen/d_text_size_medium" />
 
@@ -141,6 +166,7 @@
                         android:id="@+id/edittext_food_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
                         android:textSize="@dimen/d_text_size_medium" />
@@ -166,7 +192,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
                         android:text="@string/s_label_form_food_location_activity_add_food"
                         android:textSize="@dimen/d_text_size_medium" />
 
@@ -177,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="7"
                         android:ellipsize="end"
-                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:text="@string/s_button_no_location_choosen" />
                 </LinearLayout>
 
@@ -202,19 +228,19 @@
             </LinearLayout>
 
             <!--<LinearLayout-->
-                <!--android:id="@+id/linearlayout_addfoodmenudescription"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical">-->
+            <!--android:id="@+id/linearlayout_addfoodmenudescription"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
 
-                <!--<EditText-->
-                    <!--android:id="@+id/edit_description"-->
-                    <!--style="@style/style_margin_for_multiple_view"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="@string/s_hint_menufooddescription"-->
-                    <!--android:inputType="textMultiLine"-->
-                    <!--android:textSize="@dimen/d_text_size_small" />-->
+            <!--<EditText-->
+            <!--android:id="@+id/edit_description"-->
+            <!--style="@style/style_margin_for_multiple_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/s_hint_menufooddescription"-->
+            <!--android:inputType="textMultiLine"-->
+            <!--android:textSize="@dimen/d_text_size_small" />-->
 
             <!--</LinearLayout>-->
 

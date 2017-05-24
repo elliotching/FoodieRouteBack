@@ -42,6 +42,8 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
     private ArrayList<TokenListObject> arrayListToken = null;
     private CustomHTTP[] sendingTokenHttps = null;
 
+    private int _button_broadcast = R.string.s_button_startbroadcastmessage;
+    private int _button_sending = R.string.s_button_sendingbroadcast;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,9 +93,33 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
                 populateList(result);
             }
             if(sendingTokenHttps != null) {
+                buttonSend.setText(_button_broadcast);
                 for (int i = 0; i < sendingTokenHttps.length; i++) {
                     if (http == sendingTokenHttps[i]) {
                         Log.d("result" + i, result);
+                        try {
+
+//                            {"multicast_id":5577579200943744439,"success":0,"failure":1,"canonical_ids":0,"results":[{"error":"MissingRegistration"}]}
+                            JSONObject json = new JSONObject(result);
+                            String success = json.optString("success");
+                            String failure = json.optString("failure");
+                            String results = json.optString("results");
+
+                            if(success.equals("1")){
+                                arrayListToken.get(i).sendingResults = " success";
+                            }
+                            if(failure.equals("1")){
+
+                                JSONArray jarray = new JSONArray(results);
+                                JSONObject jobj = jarray.optJSONObject(0);
+                                String error = jobj.optString("error");
+                                arrayListToken.get(i).sendingResults = " failed, "+error;
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        listView.invalidateViews();
                         break;
                     }
                 }
@@ -116,7 +142,7 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
 
     private void startSend() {
 
-
+        buttonSend.setText(_button_sending);
         if(arrayListToken != null) {
             int size = arrayListToken.size();
             sendingTokenHttps = new CustomHTTP[size];
@@ -124,6 +150,8 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
             String shopname = ResFR.getPrefString(context, ResFR.SELLER_NAME);
             String msgContent = editBroadcastMsg.getText().toString();
             for (int i = 0; i < sendingTokenHttps.length ; i ++) {
+
+                arrayListToken.get(i).sendingResults = " "+ResFR.string(context, R.string.s_button_sendingbroadcast);
 
                 String[][] data = new String[][]{
                         {"pass", "!@#$"},
@@ -134,6 +162,7 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
                 sendingTokenHttps[i] = new CustomHTTP(context, data, ResFR.URL_send_mesg);
                 sendingTokenHttps[i].ui = listener;
             }
+            listView.invalidateViews();
         }
 
         if(sendingTokenHttps != null && sendingTokenHttps.length >= 1) {
@@ -157,7 +186,6 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
                 JSONObject json = jarray.getJSONObject(i);
                 String username = json.optString("username", "");
                 String token = json.optString("token", "");
-
                 TokenListObject tokenObj = new TokenListObject(username, token);
                 arrayListToken.add(tokenObj);
             }

@@ -4,12 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -22,7 +18,7 @@ class Dialog_CustomNotice extends AlertDialog {
     InterfaceDialog interfaceDialog;
     Context context;
 
-    Dialog_CustomNotice(Context context, int _layout, InterfaceDialog interfaces) {
+    Dialog_CustomNotice(Context context, int _string, int _layout, InterfaceDialog interfaces) {
         super(context);
         new Builder(context).create();
         this.context = context;
@@ -33,34 +29,13 @@ class Dialog_CustomNotice extends AlertDialog {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(_layout, null);
-        interfaceDialog.onCreateView(v, this);
+        interfaceDialog.onCreateDialogView(v, this);
 
+//        R.string.s_dialog_title_accountactivation
         setView(v);
-        setTitle(R.string.s_dialog_title_accountactivation);
+        setTitle(_string);
         setCancelable(false);
     }
-
-
-    private void validateActivationCode() {
-        Log.d("Elliot", "Clicked...");
-    }
-
-    private class OnEditorAction implements TextView.OnEditorActionListener {
-        @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            return false;
-        }
-    }
-
-//    private class OnOKClick implements DialogInterface.OnClickListener{
-//
-//        @Override
-//        public void onClick(DialogInterface dialogInterface, int button) {
-//            if(button == DialogInterface.BUTTON_POSITIVE){
-//                validateActivationCode();
-//            }
-//        }
-//    }
 
     Dialog_CustomNotice setPositiveKey(int _buttonText, OnClickListener onClick, boolean showDialogYet) {
         String keyText = ResFR.string(context, _buttonText);

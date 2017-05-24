@@ -93,21 +93,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/s_system"
-                    android:textSize="@dimen/d_text_size_medium"/>
+                    android:textSize="@dimen/d_text_size_small"/>
 
                 <Button
                     android:id="@+id/button_english"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/s_english"
-                    android:textSize="@dimen/d_text_size_medium"/>
+                    android:textSize="@dimen/d_text_size_small"/>
 
                 <Button
                     android:id="@+id/button_chinese"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/s_chinese"
-                    android:textSize="@dimen/d_text_size_medium"/>
+                    android:textSize="@dimen/d_text_size_small"/>
 
             </LinearLayout>
         </LinearLayout>

@@ -23,6 +23,7 @@ public class ActivityMain extends MyCustomActivity {
     Button buttonsellerviewmyfoodmenu;
     Button buttonallviewlistfood;
     Button buttonbroadcast;
+    Button buttonwipelocation;
     TextView textLocationInfo;
 
     private Listener listener;
@@ -30,6 +31,7 @@ public class ActivityMain extends MyCustomActivity {
     private CustomHTTP httpUpdateSellerLocation;
     private String sellerType;
     private double[] mycurrentlocation;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class ActivityMain extends MyCustomActivity {
         buttonsellerviewmyfoodmenu = (Button) findViewById(R.id.button_viewmyfoodmenu);
         buttonallviewlistfood = (Button) findViewById(R.id.button_viewfoodlist);
         buttonbroadcast = (Button) findViewById(R.id.button_broadcast);
+        buttonwipelocation = (Button) findViewById(R.id.button_wipeloc);
         textLocationInfo = (TextView) findViewById(R.id.text_showlocation);
 
         listener = new Listener();
@@ -51,6 +54,7 @@ public class ActivityMain extends MyCustomActivity {
         buttonsellerviewmyfoodmenu.setOnClickListener(listener);
         buttonallviewlistfood.setOnClickListener(listener);
         buttonbroadcast.setOnClickListener(listener);
+        buttonwipelocation.setOnClickListener(listener);
 
         /* get my current location */
         mycurrentlocation = ResFR.getPrefLocation(context);
@@ -58,15 +62,13 @@ public class ActivityMain extends MyCustomActivity {
         // check is my current location is empty
         if (sellerType.equals("1")) {
             hideButtonsForSeller();
-            if (isLocationEmpty(mycurrentlocation)) {
-                showDialogYourLocationIsEmpty();
-            }
         } else if (sellerType.equals("2")) {
-            hideButtonsForSeller();
+            hideButtonsForMobile();
             if (isLocationEmpty(mycurrentlocation)) {
                 showDialogYourLocationIsEmpty();
             }
-        } else {
+        } else if (sellerType.equals("0")) {
+            buttonsellerviewmyfoodmenu.setText(R.string.s_button_viewfoodsishared);
             hideButtonsForUser();
         }
     }
@@ -78,11 +80,17 @@ public class ActivityMain extends MyCustomActivity {
     private void hideButtonsForUser() {
         buttonselleraddfood.setVisibility(View.GONE);
         buttonsellerupdatelocation.setVisibility(View.GONE);
-        buttonsellerviewmyfoodmenu.setVisibility(View.GONE);
         buttonbroadcast.setVisibility(View.GONE);
+        buttonwipelocation.setVisibility(View.GONE);
     }
 
     private void hideButtonsForSeller() {
+        buttonusersharefood.setVisibility(View.GONE);
+        buttonsellerupdatelocation.setVisibility(View.GONE);
+        buttonwipelocation.setVisibility(View.GONE);
+    }
+
+    private void hideButtonsForMobile() {
         buttonusersharefood.setVisibility(View.GONE);
     }
 
@@ -112,17 +120,38 @@ public class ActivityMain extends MyCustomActivity {
         httpUpdateSellerLocation.execute();
     }
 
-    private void onHttpUpdateLocationResult(String result){
+    private void deleteLocation(){
+        String username = ResFR.getPrefString(context, ResFR.USERNAME);
+
+        String[][] data = new String[][]{
+                {"pass", "!@#$"},
+                {"username", username},
+                {"seller_location_lat", ""},
+                {"seller_location_lng", ""}
+        };
+
+        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL_update_seller_location);
+        httpUpdateSellerLocation.ui = listener;
+        httpUpdateSellerLocation.execute();
+    }
+
+    private void onHttpUpdateLocationResult(String result) {
         try {
             JSONObject json = new JSONObject(result);
             String success = json.optString("success");
             String latS = json.optString("lat");
             String lngS = json.optString("lng");
-            if(success.equals("1")){
-                textLocationInfo.setText(R.string.s_dialog_title_success);
-                double lat = Double.valueOf(latS);
-                double lng = Double.valueOf(lngS);
-                ResFR.setPrefLocation(context, new double[]{lat,lng});
+            if (success.equals("1")) {
+                if(latS.equals("") || lngS.equals("")){
+                    textLocationInfo.setText(R.string.s_deletelocationsuccess);
+                    double emptyLocation = ResFR.DEFAULT_EMPTY_LOCATION;
+                    ResFR.setPrefLocation(context, new double[]{emptyLocation, emptyLocation});
+                }else {
+                    textLocationInfo.setText(R.string.s_dialog_title_success);
+                    double lat = doubleOf(latS);
+                    double lng = doubleOf(lngS);
+                    ResFR.setPrefLocation(context, new double[]{lat, lng});
+                }
             }
 
         } catch (JSONException e) {
@@ -131,7 +160,7 @@ public class ActivityMain extends MyCustomActivity {
         }
     }
 
-    private void checkLocationAndAddFood(){
+    private void checkLocationAndAddFood() {
 
         if (sellerType.equals("1")) {
             if (isLocationEmpty(mycurrentlocation)) {
@@ -162,7 +191,7 @@ public class ActivityMain extends MyCustomActivity {
         startActivity(i);
     }
 
-    private void gotoBroadcastPage(){
+    private void gotoBroadcastPage() {
         Intent i = new Intent(context, ActivityMsgBroadcast.class);
         startActivity(i);
     }
@@ -177,17 +206,20 @@ public class ActivityMain extends MyCustomActivity {
             if (v == buttonsellerupdatelocation) {
                 startUpdateLocation();
             }
-            if (v==buttonusersharefood){
+            if (v == buttonusersharefood) {
                 postShareFood();
             }
-            if(v==buttonsellerviewmyfoodmenu){
+            if (v == buttonsellerviewmyfoodmenu) {
                 viewMyFood();
             }
-            if(v==buttonallviewlistfood){
+            if (v == buttonallviewlistfood) {
                 viewAllFood();
             }
-            if(v==buttonbroadcast){
+            if (v == buttonbroadcast) {
                 gotoBroadcastPage();
+            }
+            if( v == buttonwipelocation){
+                deleteLocation();
             }
 //            Button buttonsellerupdatelocation;
 //            Button buttonselleraddfood;

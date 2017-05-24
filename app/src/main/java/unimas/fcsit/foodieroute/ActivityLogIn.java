@@ -32,7 +32,6 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class ActivityLogIn extends MyCustomActivity {
-
     Context context = this;
     AppCompatActivity activity = (AppCompatActivity) context;
     private DrawerLayout mDrawerLayout;
@@ -122,7 +121,7 @@ public class ActivityLogIn extends MyCustomActivity {
     private void createDialogForAccountActivation() {
 
         ActivateDialog g = new ActivateDialog();
-        new Dialog_CustomNotice(context, R.layout.dialog_input_activation_key, g)
+        new Dialog_CustomNotice(context, R.string.s_dialog_title_accountactivation, R.layout.dialog_input_activation_key, g)
                 .setPositiveKey(R.string.s_dialog_btn_ok, g, false)
                 .setNegativeKey(R.string.s_dialog_btn_logout, new DialogInterface.OnClickListener() {
                     @Override
@@ -226,7 +225,7 @@ public class ActivityLogIn extends MyCustomActivity {
         Dialog_CustomNotice dialog;
 
         @Override
-        public void onCreateView(View v, Dialog_CustomNotice d) {
+        public void onCreateDialogView(View v, Dialog_CustomNotice d) {
             // ON CREATE DIALOG VIEW
 
             this.dialog = d;
@@ -353,8 +352,8 @@ public class ActivityLogIn extends MyCustomActivity {
                         ResFR.setPrefString(context, ResFR.SELLER_DOC_2, seller_doc_2);
                         ResFR.setPrefString(context, ResFR.SELLER_IC_PHOTO, seller_ic_photo);
 
-                        double lat = Double.parseDouble(seller_location_lat);
-                        double lng = Double.parseDouble(seller_location_lng);
+                        double lat = doubleOf(seller_location_lat);
+                        double lng = doubleOf(seller_location_lng);
                         ResFR.setPrefLocation(context, new double[]{lat, lng});
                     }
 
@@ -438,8 +437,7 @@ public class ActivityLogIn extends MyCustomActivity {
                         e.printStackTrace();
 
                         // SHOW ERROR MESSAGE FROM PHP!!!
-                        new Dialog_AlertNotice(context, R.string.s_dialog_title_error, result)
-                                .setPositiveKey(R.string.s_dialog_btn_ok, null);
+                        showDialogPhpError(result);
 
                     }
                 }

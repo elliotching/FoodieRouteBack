@@ -155,12 +155,6 @@ public class ActivitySearch extends MyCustomActivity {
                     String is_seller = json.optString("is_seller");
                     String food_comment = json.optString("food_comment");
 
-                    date_time = date_time.replace("----", "_");
-                    String[] datetime = date_time.split("_");
-                    String date = datetime[0];
-                    String time = datetime[1];
-                    date_time = date + " " + time;
-
                     FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
                     food.distanceString = ResFR.string(context, R.string.s_listview_calc_distance);
                     foodArray.add(food);

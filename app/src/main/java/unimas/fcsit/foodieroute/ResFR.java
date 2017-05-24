@@ -40,8 +40,8 @@ class ResFR {
     static final String DEFAULT_EMPTY = "empty";
     static final String THEME_LIGHT_DEFAULT = "Light";
     static final String THEME_DARK = "Dark";
-    static final float DEFAULT_EMPTY_LOCATION = -Float.MAX_VALUE;
-    static final float CHECK_EMPTY_LOCATION = ((-Float.MAX_VALUE) + 1.0f);
+    static final float DEFAULT_EMPTY_LOCATION = 12123123123123123.0f;//Float.MAX_VALUE;
+    static final float CHECK_EMPTY_LOCATION = 12123123123123.0f;;
 
 
     // USED IN ACTIVITY LOG IN ( WHENEVER RECEIVED MESSAGE OF "LOG OUT" = 1 )
@@ -173,6 +173,12 @@ class ResFR {
         return String.format("%.10f", value);
     }
 
-
+    static double doubleOf(String s){
+        try {
+            return Double.valueOf(s);
+        }catch(Exception e){
+            return ResFR.DEFAULT_EMPTY_LOCATION;
+        }
+    }
 
 }

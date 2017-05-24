@@ -118,7 +118,7 @@ public class ActivityChangePassword extends MyCustomActivity {
 //        Dialog_Progress p = new Dialog_Progress(context, R.string.)
 
         ActivateDialog g = new ActivateDialog();
-        new Dialog_CustomNotice(context, R.layout.dialog_input_activation_key, g )
+        new Dialog_CustomNotice(context, R.string.s_dialog_title_accountactivation, R.layout.dialog_input_activation_key, g )
                 .setPositiveKey(R.string.s_dialog_btn_ok, g , false)
                 .setNegativeKey(R.string.s_dialog_btn_cancel, null, true);
     }
@@ -131,7 +131,7 @@ public class ActivityChangePassword extends MyCustomActivity {
         TextView textViewSpamJunkMailBox;
         AlertDialog dialog;
         @Override
-        public void onCreateView(View v, Dialog_CustomNotice d) {
+        public void onCreateDialogView(View v, Dialog_CustomNotice d) {
             // ON CREATE DIALOG VIEW
 
             this.dialog = d;

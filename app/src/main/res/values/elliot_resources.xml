@@ -2,6 +2,14 @@
 
 <!--COLOR-->
     <!-- color-code-light : 00ffe7 -->
+    <!--<color name="c_light_cyan">#ffff00</color>-->
+    <!--<color name="c_dark_cyan">#827717</color>-->
+    <!--<color name="c_yellow">#ffff8d</color>-->
+
+    <!--<color name="c_yellow_cyan">#7fff7f</color>-->
+    <!--<color name="c_sdark_cyan">#232300</color>-->
+    <!--<color name="c_pale_cyan">#ffffb1</color>-->
+
     <color name="c_light_cyan">#00ffe7</color>
     <color name="c_dark_cyan">#008073</color>
     <color name="c_yellow">#ffff8d</color>

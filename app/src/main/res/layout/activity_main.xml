@@ -38,7 +38,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/s_button_updatelocation"
                 android:textSize="@dimen/d_text_size_small" />
-
+            <!--button_wipeloc-->
+            <Button
+                android:id="@+id/button_wipeloc"
+                style="@style/style_default_button_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/s_button_removemylocation"
+                android:textSize="@dimen/d_text_size_small" />
             <!-- Seller -->
             <TextView
                 android:id="@+id/text_showlocation"

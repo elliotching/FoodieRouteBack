@@ -54,7 +54,7 @@ class AdapterTokenListView extends BaseAdapter {
         }
 
         holder.textUser.setText(data.get(position).username);
-        holder.textToken.setText(data.get(position).token);
+        holder.textToken.setText(data.get(position).sendingResults);
         return view;
     }
 
