@@ -20,11 +20,12 @@ class AsyncLogOut {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username}
+                {"act", "logout"},
+                {"mode", "mobile"},
+                {"user", username}
         };
 
-        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL_log_out);
+        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL);
         c.ui = interfaceCustomHTTP;
         c.execute();
     }

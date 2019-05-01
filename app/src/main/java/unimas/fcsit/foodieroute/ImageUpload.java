@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -18,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 
 class ImageUpload {
 
-    private static final String url_upload = ResFR.URL_upload;
+    private static final String url_upload = ResFR.URL_UPLOAD;
     private static Context context;
 
     private static InterfaceUploadListener finished;

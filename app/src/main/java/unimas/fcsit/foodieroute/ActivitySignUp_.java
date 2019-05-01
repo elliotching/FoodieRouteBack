@@ -72,7 +72,7 @@
 //            String password = editPassword.getText().toString();
 //            String confirm = editConfirmPassword.getText().toString();
 //
-//            if(username.matches("")||email.matches("")||password.matches("")||confirm.matches("")){
+//            if(username.equals("")||email.equals("")||password.equals("")||confirm.equals("")){
 //                pd.dismiss();
 //                new Dialog_AlertNotice(context, "Error", "Please fill in all fields.").setPositiveKey("OK",null);
 //            }else if(!password.equals(confirm)){

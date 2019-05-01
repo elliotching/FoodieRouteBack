@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.IntentCompat;
@@ -15,12 +18,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -286,7 +291,8 @@ class MyCustomActivity extends AppCompatActivity {
 
     void restartAtLogIn() {
         Intent i = new Intent(context, ActivityLogIn.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+//        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.finish();
         activity.startActivity(i);
     }
@@ -294,6 +300,18 @@ class MyCustomActivity extends AppCompatActivity {
     void showDialogPhpError(String error){
         new Dialog_AlertNotice(context, R.string.s_dialog_title_error, error)
                 .setPositiveKey(R.string.s_dialog_btn_ok, null);
+    }
+
+    void showDialogPhpError(final String error, final boolean closeActivityIfFAILTOCONNECT){
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_error, error)
+                .setPositiveKey(R.string.s_dialog_btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(closeActivityIfFAILTOCONNECT && error.equals(ResFR.string(context, R.string.s_dialog_msg_failedconnect))){
+                            activity.finish();
+                        }
+                    }
+                });
     }
 
 
@@ -393,7 +411,7 @@ class MyCustomActivity extends AppCompatActivity {
         food.distanceDouble = distanceValueMeterDouble;
     }
 
-
+    // Haversine formulae
     ValueDist distanceOf(double lat1, double lon1,
                                  double lat2, double lon2,
                                  double el1, double el2) {
@@ -449,7 +467,7 @@ class MyCustomActivity extends AppCompatActivity {
     void restartFromMainActivity() {
         Intent i = new Intent(context, ActivityMain.class);
         activity.finish();
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(i);
     }
 
@@ -464,8 +482,9 @@ class MyCustomActivity extends AppCompatActivity {
         Log.d("language", appLang);
         DisplayMetrics dm = res.getDisplayMetrics();
         android.content.res.Configuration conf = res.getConfiguration();
-        conf.locale = (new Locale(appLang)); // API 17+ only.
-// Use conf.locale = new Locale(...) if targeting lower versions
+        conf.locale = (new Locale(appLang));
+        // API 17+ only.
+        // Use conf.locale = new Locale(...) if targeting lower versions
         res.updateConfiguration(conf, dm);
     }
 
@@ -484,6 +503,66 @@ class MyCustomActivity extends AppCompatActivity {
                 activity.finish();
             }
         };
+    }
+
+    void adjustImageSize(ImageView imageView, int widthRatio, int heightRatio, int maxWidthPixel, float percentageMaxImageWidthToScreen) {
+        /* Adjust Image Viewport Size */
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+        Log.d("AdapterImageView", "LinearLayout.LayoutParams params.width = "+params.width);
+        int screenWidth = Screen.getWidth(context);
+        Log.d("AdapterImageView", "screenWidth = "+screenWidth);
+        int pixelOf20dp = Screen.getPixels(context, 20.0f);
+        Log.d("AdapterImageView", "pixelOf20dp = "+pixelOf20dp);
+        int marginLR = pixelOf20dp * 2;
+        Log.d("AdapterImageView", "marginLR = "+marginLR);
+        int maxImageWidth = screenWidth - marginLR;
+//        int maxImageWidthChanged = maxImageWidthAvailableOriginal;
+        Log.d("AdapterImageView", "maxImageWidth = "+maxImageWidth);
+
+//        int imageViewNewWidth = maxImageWidth / 2;
+
+        if(widthRatio == 0) {
+            widthRatio = 1;
+        }
+        if(heightRatio == 0) {
+            heightRatio = 1;
+        }
+
+        if(percentageMaxImageWidthToScreen <= 0.5f) {
+            // Do nothing
+        }
+        else{
+            float maxImageWF = maxImageWidth;
+            maxImageWF = maxImageWF * percentageMaxImageWidthToScreen / 100.0f;
+            maxImageWidth = (int)maxImageWF;
+        }
+
+        if(maxWidthPixel == 0) {
+            // Do nothing
+        }
+        else if (maxImageWidth > maxWidthPixel) {
+            maxImageWidth = maxWidthPixel;
+        }
+
+
+        params.width = maxImageWidth;
+        int imageViewNewHeight = maxImageWidth / widthRatio * heightRatio;
+
+        params.height = imageViewNewHeight;
+
+        imageView.setLayoutParams(params);
+    }
+
+    void adjustImageSize(ImageView imageView) {
+        adjustImageSize(imageView, 4, 3, 1280, 0);
+    }
+
+    void createBitmapDisplayOnImageView(ImageView imageView, String filepath){
+//        File image = new File(filepath);
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+//        imageView.setImageBitmap(bitmap);
+        imageView.setImageURI(Uri.parse(filepath));
     }
 }
 

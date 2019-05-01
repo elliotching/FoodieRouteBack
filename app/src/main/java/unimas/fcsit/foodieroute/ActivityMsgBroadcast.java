@@ -73,9 +73,9 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
         progGetAllToken = new Dialog_Progress(activity, R.string.s_prgdialog_title_retrieve, R.string.s_prgdialog_msg_gettingalluserstoken, true);
 
         String[][] data = {
-                {"pass", "!@#$"}
+                {"act", "getalltokens"}
         };
-        httpGetAllToken = new CustomHTTP(context, data, ResFR.URL_get_all_token);
+        httpGetAllToken = new CustomHTTP(context, data, ResFR.URL);
         httpGetAllToken.ui = listener;
         httpGetAllToken.execute();
     }
@@ -154,12 +154,12 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
                 arrayListToken.get(i).sendingResults = " "+ResFR.string(context, R.string.s_button_sendingbroadcast);
 
                 String[][] data = new String[][]{
-                        {"pass", "!@#$"},
+                        {"act", "sendmsg"},
                         {"token", arrayListToken.get(i).token},
                         {"data_body", "["+shopname+"]"+" "+msgContent},
-                        {"username", username}
+                        {"user", username}
                 };
-                sendingTokenHttps[i] = new CustomHTTP(context, data, ResFR.URL_send_mesg);
+                sendingTokenHttps[i] = new CustomHTTP(context, data, ResFR.URL);
                 sendingTokenHttps[i].ui = listener;
             }
             listView.invalidateViews();
@@ -184,7 +184,8 @@ public class ActivityMsgBroadcast extends MyCustomActivity {
             arrayListToken = new ArrayList<>();
             for(int i = 0 ; i < jarray.length() ; i ++){
                 JSONObject json = jarray.getJSONObject(i);
-                String username = json.optString("username", "");
+//                String username = json.optString("username", "");
+                String username = json.optString("user", "");
                 String token = json.optString("token", "");
                 TokenListObject tokenObj = new TokenListObject(username, token);
                 arrayListToken.add(tokenObj);

@@ -22,7 +22,7 @@ class AdapterFoodMenu extends BaseAdapter {
     private Context context;
     private ArrayList<FoodListingObject> data;
 
-    private static final String url_read_image = ResFR.URL_read_small_image + "?image_name=" ;
+    private static final String url_read_image = ResFR.URL_READIMG + "?image_name=" ;
 
     static double[] myLocation = new double[]{ResFR.DEFAULT_EMPTY_LOCATION , ResFR.DEFAULT_EMPTY_LOCATION};
 
@@ -110,9 +110,13 @@ class AdapterFoodMenu extends BaseAdapter {
             holder.textUsername.setText(poster);
 
             /* Comment: */
-            String comment = ResFR.string(context, R.string.s_listview_comment);
-            comment = comment + " " + data.get(position).food_comment;
-            holder.textFoodComment.setText(comment);
+            if (data.get(position).food_comment.equals(" ") || data.get(position).food_comment.equals("")) {
+                holder.textFoodComment.setText("");
+            } else {
+                String comment = ResFR.string(context, R.string.s_listview_comment);
+                comment = comment + " " + data.get(position).food_comment;
+                holder.textFoodComment.setText(comment);
+            }
         }
 
         String locationunknown = ResFR.string(context, R.string.s_label_locationunknown);

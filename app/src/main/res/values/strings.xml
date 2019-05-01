@@ -249,9 +249,9 @@
     <!--************************************************************-->
     <string name="s_button_removemylocation">Remove my location</string>
     <string name="s_deletelocationsuccess">Location deleted.</string>
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
-    <!--<string name="s_changelanguage">Log out</string>-->
+    <string name="s_dialog_msg_yourlocationnotreceivedfrommap">Failed to receive location.</string>
+    <string name="s_radiobutton_main_quicksavelocation">Quick Mode: Quick save location (might not accurate).</string>
+    <string name="s_radiobutton_main_chooselocationinmap">Precise Mode: Pick location using map.</string>
     <!--<string name="s_changelanguage">Log out</string>-->
     <!--<string name="s_changelanguage">Log out</string>-->
     <!--<string name="s_changelanguage">Log out</string>-->

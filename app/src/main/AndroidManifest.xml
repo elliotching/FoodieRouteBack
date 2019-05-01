@@ -67,7 +67,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".ActivityFirebaseResult"/>
-        <activity android:name=".ActivityPostHTTPDataFirebaseTest" />
+        <!--<activity android:name=".ActivityPostHTTPDataFirebaseTest" />-->
 
         <activity android:name=".ActivityFoodListingListViewElliot"
             android:screenOrientation="portrait" />
@@ -96,6 +96,7 @@
         <activity android:name=".ActivityChangePassword"
             android:screenOrientation="portrait" />
         <activity android:name=".ActivityMain"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity android:name=".ActivityFoodMenu" />
         <activity android:name=".ActivityMsgBroadcast" />

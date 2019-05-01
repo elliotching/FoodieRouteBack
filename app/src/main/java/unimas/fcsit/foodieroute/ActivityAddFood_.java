@@ -112,7 +112,7 @@
 //                String food_name = editTextFoodName.getText().toString();
 //                String food_price = editTextFoodPrice.getText().toString();
 //
-//                if(arrayImage == null || food_name.matches("") || food_price.matches("") ||
+//                if(arrayImage == null || food_name.equals("") || food_price.equals("") ||
 //                        (!checkBoxMobileSeller.isChecked() && pickedLocation == null)){
 //                    new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_please_fill_all)
 //                            .setPositiveKey(R.string.s_dialog_btn_ok, null);

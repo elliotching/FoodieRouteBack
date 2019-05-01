@@ -55,6 +55,13 @@ class AdapterTokenListView extends BaseAdapter {
 
         holder.textUser.setText(data.get(position).username);
         holder.textToken.setText(data.get(position).sendingResults);
+        if(data.get(position).sendingResults.contains("success")){
+            holder.textToken.setTextColor(ResFR.color(context,R.color.c_t_green_for_fcm_status));
+        }else if(data.get(position).sendingResults.contains("failed")){
+            holder.textToken.setTextColor(ResFR.color(context,R.color.c_t_red_for_fcm_status));
+        }else {
+            holder.textToken.setTextColor(ResFR.color(context,R.color.c_t_yellow_for_fcm_status));
+        }
         return view;
     }
 

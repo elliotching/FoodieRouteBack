@@ -104,7 +104,7 @@ public class FragmentLogIn extends Fragment {
 //        String username = editTextUsername.getText().toString();
 //        String password = editTextPassword.getText().toString();
 //
-//        if(username.matches("")||password.matches("")){
+//        if(username.equals("")||password.equals("")){
 //            new Dialog_AlertNotice(context, "Error", "Please fill in all fields.").setPositiveKey("OK", null);
 //        }
 //        else{

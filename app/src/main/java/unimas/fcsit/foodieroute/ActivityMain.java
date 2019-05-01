@@ -3,9 +3,15 @@ package unimas.fcsit.foodieroute;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -24,7 +30,17 @@ public class ActivityMain extends MyCustomActivity {
     Button buttonallviewlistfood;
     Button buttonbroadcast;
     Button buttonwipelocation;
+    RadioButton radioQuick;
+    RadioButton radioPrecise;
+    LinearLayout layoutSellerUpdateLocation;
+
     TextView textLocationInfo;
+    ImageView image;
+    ImageView image2;
+    ImageView image3;
+    boolean[] isRadioQuickOrPreciseChecked = new boolean[]{false,false}; // 0 = quick, 1 = precise
+
+    private static final int REQUEST_CODE_OPEN_MAP_SET_LOCATION = 213;
 
     private Listener listener;
     private FusedLocationTracker locationTracker;
@@ -37,6 +53,9 @@ public class ActivityMain extends MyCustomActivity {
         super.onCreate(savedInstanceState);
         createMyView(R.layout.activity_main, R.id.toolbar);
         changeMenu(true, true, true, true, false);
+
+        ResFR.checkFirebaseTokenIfNoThenMakeToast(context);
+
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         buttonselleraddfood = (Button) findViewById(R.id.button_addfood);
         buttonsellerupdatelocation = (Button) findViewById(R.id.button_updatelocation);
@@ -46,6 +65,14 @@ public class ActivityMain extends MyCustomActivity {
         buttonbroadcast = (Button) findViewById(R.id.button_broadcast);
         buttonwipelocation = (Button) findViewById(R.id.button_wipeloc);
         textLocationInfo = (TextView) findViewById(R.id.text_showlocation);
+        layoutSellerUpdateLocation = (LinearLayout) findViewById(R.id.layout_seller_update_location);
+        radioQuick = (RadioButton) findViewById(R.id.radio_quick);
+        radioPrecise = (RadioButton) findViewById(R.id.radio_precise);
+        image = (ImageView) findViewById(R.id.imageview_activitymain);
+        image2 = (ImageView) findViewById(R.id.imageviewbottom_activitymain);
+        image3 = (ImageView) findViewById(R.id.imagesarawakyes_activitymain);
+
+        updateRadioButtonFromPref(radioQuick, radioPrecise);
 
         listener = new Listener();
         buttonsellerupdatelocation.setOnClickListener(listener);
@@ -55,6 +82,12 @@ public class ActivityMain extends MyCustomActivity {
         buttonallviewlistfood.setOnClickListener(listener);
         buttonbroadcast.setOnClickListener(listener);
         buttonwipelocation.setOnClickListener(listener);
+        radioQuick.setOnCheckedChangeListener(listener);
+        radioPrecise.setOnCheckedChangeListener(listener);
+
+        adjustImageSize(image, 1, 1, 0, 40.0f);
+        adjustImageSize(image2, 1, 1, 0, 40.0f);
+        adjustImageSize(image3, 3, 1, 0, 100.0f);
 
         /* get my current location */
         mycurrentlocation = ResFR.getPrefLocation(context);
@@ -79,7 +112,7 @@ public class ActivityMain extends MyCustomActivity {
 
     private void hideButtonsForUser() {
         buttonselleraddfood.setVisibility(View.GONE);
-        buttonsellerupdatelocation.setVisibility(View.GONE);
+        layoutSellerUpdateLocation.setVisibility(View.GONE);
         buttonbroadcast.setVisibility(View.GONE);
         buttonwipelocation.setVisibility(View.GONE);
     }
@@ -95,8 +128,15 @@ public class ActivityMain extends MyCustomActivity {
     }
 
     private void startUpdateLocation() {
-        locationTracker = new FusedLocationTracker(context, listener);
-        textLocationInfo.setText(R.string.s_text_gettingyourlocation);
+        if(isRadioQuickOrPreciseChecked[0] /* direct update */ ) {
+            locationTracker = new FusedLocationTracker(context, listener);
+            textLocationInfo.setText(R.string.s_text_gettingyourlocation);
+        }else if(isRadioQuickOrPreciseChecked[1] /* open map view */ ){
+            Intent i = new Intent(context, ActivityMaps.class);
+            startActivityForResult(i, REQUEST_CODE_OPEN_MAP_SET_LOCATION);
+        }else{
+
+        }
     }
 
     private void onLocationReceivedDoHttpSave(Location location) {
@@ -109,28 +149,51 @@ public class ActivityMain extends MyCustomActivity {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username},
-                {"seller_location_lat", lat},
-                {"seller_location_lng", lng}
+                {"act", "updselloc"},
+                {"user", username},
+                {"mode", "mobile"},
+                {"slloclat", lat},
+                {"slloclng", lng}
         };
 
-        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL_update_seller_location);
+        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL);
+        httpUpdateSellerLocation.ui = listener;
+        httpUpdateSellerLocation.execute();
+    }
+
+    private void onLocationReceivedDoHttpSave(double[] location) {
+        String lat = stringOf(location[0]);
+        String lng = stringOf(location[1]);
+        String savingyourlocation = ResFR.string(context, R.string.s_text_savingyourlocation);
+        textLocationInfo.setText(savingyourlocation + " " + lat + " , " + lng);
+
+        String username = ResFR.getPrefString(context, ResFR.USERNAME);
+    
+        String[][] data = new String[][]{
+                {"act", "updselloc"},
+                {"user", username},
+                {"mode", "mobile"},
+                {"slloclat", lat},
+                {"slloclng", lng}
+        };
+
+        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL);
         httpUpdateSellerLocation.ui = listener;
         httpUpdateSellerLocation.execute();
     }
 
     private void deleteLocation(){
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
-
+    
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username},
-                {"seller_location_lat", ""},
-                {"seller_location_lng", ""}
+                {"act", "delselloc"},
+                {"user", username},
+                {"mode", "mobile"},
+                {"slloclat", ""},
+                {"slloclng", ""}
         };
 
-        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL_update_seller_location);
+        httpUpdateSellerLocation = new CustomHTTP(context, data, ResFR.URL);
         httpUpdateSellerLocation.ui = listener;
         httpUpdateSellerLocation.execute();
     }
@@ -196,7 +259,7 @@ public class ActivityMain extends MyCustomActivity {
         startActivity(i);
     }
 
-    private class Listener implements View.OnClickListener, FusedLocationDataInterface, InterfaceCustomHTTP {
+    private class Listener implements View.OnClickListener, FusedLocationDataInterface, InterfaceCustomHTTP, CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onClick(View v) {
@@ -245,6 +308,70 @@ public class ActivityMain extends MyCustomActivity {
                 onHttpUpdateLocationResult(result);
             }
         }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if( buttonView == radioQuick && isChecked ){
+                Log.d(TAG, "radioQuickPressed");
+                isRadioQuickOrPreciseChecked = new boolean[]{true, false};
+                saveRadioButtonStatus(isRadioQuickOrPreciseChecked);
+            }
+            if( buttonView == radioPrecise && isChecked ){
+                Log.d(TAG, "radioPrecisePressed");
+                isRadioQuickOrPreciseChecked = new boolean[]{false, true};
+                saveRadioButtonStatus(isRadioQuickOrPreciseChecked);
+            }
+
+            Log.d(TAG, "radioPressedExit");
+        }
     }
+
+
+
+    private void updateRadioButtonFromPref(RadioButton quick, RadioButton precise){
+        int radioNumber = ResFR.getPrefRadioOfUpdateLocation(context);
+        Log.d(TAG, "loaded Radio Button = "+radioNumber);
+        if(radioNumber == 0) {
+            quick.setChecked(true);
+            precise.setChecked(false);
+            isRadioQuickOrPreciseChecked = new boolean[]{true, false};
+        }else if(radioNumber == 1){
+            quick.setChecked(false);
+            precise.setChecked(true);
+            isRadioQuickOrPreciseChecked = new boolean[]{false, true};
+        }else{
+
+        }
+    }
+
+    private void saveRadioButtonStatus(boolean[] b){
+        for(int i = 0; i < b.length ; i++){
+            if(b[i]){
+                ResFR.setPrefRadioOfUpdateLocation(context, i);
+                Log.d(TAG, "saved Radio Button = "+i);
+                return;
+            }
+        }
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == REQUEST_CODE_OPEN_MAP_SET_LOCATION && resultCode == RESULT_OK){
+            double[] locationResult = data.getDoubleArrayExtra(ResFR.INTENT_ACTIVITY_RESULT_PUT_EXTRA_LOCATION_KEY);
+
+            if(locationResult != null) {
+                onLocationReceivedDoHttpSave(locationResult);
+            }else{
+                showDialogYourLocationIsRecievedFromMap();
+            }
+        }
+    }
+
+    private void showDialogYourLocationIsRecievedFromMap() {
+
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_warning, R.string.s_dialog_msg_yourlocationnotreceivedfrommap).setPositiveKey(R.string.s_dialog_btn_ok, null);
+
+    }
+
 
 }

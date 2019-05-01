@@ -22,9 +22,9 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
     private Context context;
     private ArrayList<FoodListingObject> data;
 
-    private static final String url_read_image = ResFR.URL_read_small_image + "?image_name=" ;
+    private static final String url_read_image = ResFR.URL_READIMG + "?image_name=";
 
-    static double[] myLocation = new double[]{ResFR.DEFAULT_EMPTY_LOCATION , ResFR.DEFAULT_EMPTY_LOCATION};
+    static double[] myLocation = new double[]{ResFR.DEFAULT_EMPTY_LOCATION, ResFR.DEFAULT_EMPTY_LOCATION};
 
     public AdapterFoodListingListViewElliot(Context context, ArrayList<FoodListingObject> data) {
         this.data = data;
@@ -49,7 +49,7 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Log.d("FoodListView", "position = "+position+" is viewed");
+        Log.d("FoodListView", "position = " + position + " is viewed");
 
         ItemHolder holder;
         View view = convertView;
@@ -68,13 +68,13 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
             holder.imageView = (ImageView) view.findViewById(R.id.imageview_adapter_list_view);
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.imageView.getLayoutParams();
-            Log.d("AdapterImageView", "LinearLayout.LayoutParams params.width = "+params.width);
+            Log.d("AdapterImageView", "LinearLayout.LayoutParams params.width = " + params.width);
             int screenWidth = Screen.getWidth(context);
             int imageViewNewWidth = screenWidth / 5 * 2;
             int imageViewNewHeight = screenWidth / 5 * 2 / 4 * 3;
 
-            Log.d("AdapterImageView", "imageViewNewWidth = "+imageViewNewWidth);
-            Log.d("AdapterImageView", "imageViewNewHeight = "+imageViewNewHeight);
+            Log.d("AdapterImageView", "imageViewNewWidth = " + imageViewNewWidth);
+            Log.d("AdapterImageView", "imageViewNewHeight = " + imageViewNewHeight);
             params.width = imageViewNewWidth;
             params.height = imageViewNewHeight;
             holder.imageView.setLayoutParams(params);
@@ -83,7 +83,6 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         } else {
             holder = (ItemHolder) view.getTag();
         }
-
 
 
         holder.textDateTime.setText(data.get(position).date_time);
@@ -99,20 +98,25 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         /* Price of food. */
         String price = ResFR.string(context, R.string.s_listview_price);
         double priceD = ResFR.doubleOf(data.get(position).food_price);
-        String priceDS = String.format("%.2f",priceD);
+        String priceDS = String.format("%.2f", priceD);
         price = price.replace("$money$", priceDS);
         holder.textFoodPrice.setText(price);
 
-        if(data.get(position).is_seller.equals("0")) {
+        if (data.get(position).is_seller.equals("0")) {
             /* username who posted/shared this food */
             String poster = ResFR.string(context, R.string.s_listview_username);
             poster = poster.replace("$user$", data.get(position).username);
             holder.textUsername.setText(poster);
 
             /* Comment: */
-            String comment = ResFR.string(context, R.string.s_listview_comment);
-            comment = comment + " " + data.get(position).food_comment;
-            holder.textFoodComment.setText(comment);
+            if (data.get(position).food_comment.equals(" ") || data.get(position).food_comment.equals("")) {
+                holder.textFoodComment.setText("");
+            } else {
+                String comment = ResFR.string(context, R.string.s_listview_comment);
+                comment = comment + " " + data.get(position).food_comment;
+                holder.textFoodComment.setText(comment);
+            }
+
         }
 
         String locationunknown = ResFR.string(context, R.string.s_label_locationunknown);
@@ -141,14 +145,12 @@ class AdapterFoodListingListViewElliot extends BaseAdapter {
         ImageView imageView;
     }
 
-    void setTextDistance(int position){
+    void setTextDistance(int position) {
 
     }
 
 
-
-
-    String stringOf(double value){
+    String stringOf(double value) {
         return String.format("%.0f", value);
     }
 }

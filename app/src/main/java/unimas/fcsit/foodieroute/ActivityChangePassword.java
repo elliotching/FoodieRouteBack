@@ -65,14 +65,15 @@ public class ActivityChangePassword extends MyCustomActivity {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username},
-                {"old_password", md5(oldP)},
-                {"new_password", md5(newP)},
-                {"confirm_password", md5(confirmP)}
+                {"act","changepass"},
+                {"mode","mobile"},
+                {"user", username},
+                {"old_pass", md5(oldP)},
+                {"new_pass", md5(newP)},
+                {"con_pass", md5(confirmP)}
         };
 
-        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL_change_password);
+        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL);
         c.ui = new InterfaceCustomHTTP() {
             @Override
             public void onCompleted(String result) {
@@ -174,11 +175,12 @@ public class ActivityChangePassword extends MyCustomActivity {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"activation_code", code},
-                {"username", username}
+                {"act", "activation"},
+                {"mode","mobile"},
+                {"code", code},
+                {"user", username}
         };
-        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL_account_activation);
+        CustomHTTP c = new CustomHTTP(context, data, ResFR.URL);
         c.ui = new InterfaceCustomHTTP() {
             @Override
             public void onCompleted(String result) {

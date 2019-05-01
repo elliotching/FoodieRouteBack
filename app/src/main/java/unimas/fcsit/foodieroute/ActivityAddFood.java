@@ -5,6 +5,7 @@ package unimas.fcsit.foodieroute;
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -136,13 +137,13 @@ public class ActivityAddFood extends MyCustomActivity {
 
 //                        (!checkBoxMobileSeller.isChecked() && pickedLocation == null)
                 if (isSeller) {
-                    if (arrayImage == null || food_name.matches("") || food_price.matches("")) {
+                    if (arrayImage == null || food_name.equals("") || food_price.equals("")) {
                         showDialogFillInAll();
                     } else {
                         uploadImage();
                     }
                 } else {
-                    if (arrayImage == null || food_name.matches("") || food_price.matches("") || food_comment.matches("") || pickedLocation == null || seller_name.matches("")) {
+                    if (arrayImage == null || food_name.equals("") || food_price.equals("") || pickedLocation == null || seller_name.equals("")) {
                         showDialogFillInAll();
                     } else {
                         uploadImage();
@@ -177,12 +178,7 @@ public class ActivityAddFood extends MyCustomActivity {
 //        pickedImage.setLayoutParams(layoutParams);
 //    }
 
-    private void createBitmapDisplayOnImageView(String filepath){
-        File image = new File(filepath);
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-        image_pickedImageView.setImageBitmap(bitmap);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,7 +189,7 @@ public class ActivityAddFood extends MyCustomActivity {
             arrayImage = data.getExtras().getStringArray("filenamearray");
             if (arrayImage != null) {
                 buttonPickImage.setText(arrayImage[1]);
-                createBitmapDisplayOnImageView(arrayImage[0]);
+                createBitmapDisplayOnImageView(image_pickedImageView, arrayImage[2]);
             }
         } else if (requestCode == PICK_IMAGE_CODE) {
             if (arrayImage == null) {
@@ -204,7 +200,7 @@ public class ActivityAddFood extends MyCustomActivity {
 
         // return from map activity
         if (resultCode == RESULT_OK && requestCode == PICK_LOC_CODE) {
-            pickedLocation = data.getExtras().getDoubleArray("savedlocation");
+            pickedLocation = data.getExtras().getDoubleArray(ResFR.INTENT_ACTIVITY_RESULT_PUT_EXTRA_LOCATION_KEY);
             if (pickedLocation == null) {
                 setButtonDefaultTextNoLocationChoosen(buttonChosenLocation1);
             } else {
@@ -240,6 +236,8 @@ public class ActivityAddFood extends MyCustomActivity {
             String filename = arrayImage[1];
             if (imgPath != null && !imgPath.isEmpty()) {
 
+
+
                 // Convert image to String using Base64
                 ImageUpload.encodeImagetoString(context, imgPath, filename, uplaodListener);
                 // When Image is not selected from Gallery
@@ -263,6 +261,9 @@ public class ActivityAddFood extends MyCustomActivity {
             // when upload onFinishedUpload
             // when upload finish
             // do submit food data.
+
+
+            deleteFoodieImage(arrayImage[0]);
 
             dialog_progress_submit.setTitle(R.string.s_prgdialog_title_submit_food);
             dialog_progress_submit.setMessage(R.string.s_prgdialog_submitting_food);
@@ -290,20 +291,21 @@ public class ActivityAddFood extends MyCustomActivity {
             String is_seller = ResFR.getPrefString(context, ResFR.IS_SELLER);
 
             String[][] data = new String[][]{
-                    {"pass", "!@#$"},
-                    {"username", username},
-                    {"image_file_name", image_file_name},
-                    {"food_name", food_name},
-                    {"food_price", food_price},
-                    {"seller_location_lat", seller_location_lat},
-                    {"seller_location_lng", seller_location_lng},
-                    {"seller_name", seller_name},
-                    {"is_seller", is_seller},
-                    {"food_comment", food_comment}
+                    {"act", "addfood"},
+                    {"mode","mobile"},
+                    {"user", username},
+                    {"imgfname", image_file_name},
+                    {"fdname", food_name},
+                    {"fdprice", food_price},
+                    {"slloclat", seller_location_lat},
+                    {"slloclng", seller_location_lng},
+                    {"slname", seller_name},
+                    {"isseller", is_seller},
+                    {"fdcomment", food_comment}
             };
 
 
-            httpAddFood = new CustomHTTP(context, data, ResFR.URL_add_food);
+            httpAddFood = new CustomHTTP(context, data, ResFR.URL);
             httpAddFood.ui = new ConnectionListener();
             httpAddFood.execute();
         }
@@ -343,8 +345,25 @@ public class ActivityAddFood extends MyCustomActivity {
     }
 
     private void showDialogSuccess() {
-        new Dialog_AlertNotice(context, R.string.s_dialog_title_success, R.string.s_dialog_add_food_success).setPositiveKey(R.string.s_dialog_btn_ok, null);
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_success, R.string.s_dialog_add_food_success).setPositiveKey(R.string.s_dialog_btn_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                activity.finish();
+            }
+        });
     }
 
+    private boolean deleteFoodieImage(String fullPathFileString){
+        File fdelete = new File(fullPathFileString);
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                return true;
+            } else {
+                System.out.println("file not Deleted :" + fullPathFileString);
+                return false;
+            }
+        }
+        return false;
+    }
 
 }

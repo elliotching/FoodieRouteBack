@@ -7,6 +7,9 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static unimas.fcsit.foodieroute.ResFR.DEFAULT_EMPTY;
 import static unimas.fcsit.foodieroute.ResFR.DEVICE;
 import static unimas.fcsit.foodieroute.ResFR.DEVICEUUID;
@@ -35,7 +38,9 @@ public class ServiceAndroidFirebaseInstanceIDElliot extends FirebaseInstanceIdSe
         //Get hold of the registration token
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
-        ResFR.setPrefString(context, ResFR.TOKEN, refreshedToken);
+        String jtoken="";
+        jtoken = ResFR.getTokenFromFCM_JSON(refreshedToken);
+        ResFR.setPrefString(context, ResFR.TOKEN, jtoken);
 
         //Log the token
         Log.d(TAG, "Refreshed token: " + refreshedToken);
@@ -49,18 +54,18 @@ public class ServiceAndroidFirebaseInstanceIDElliot extends FirebaseInstanceIdSe
         String notification = ResFR.string(context, R.string.s_notif_msg_token_updated);
 
         String[][] data = {
-                {"pass", "!@#$"},
+                {"act", "tokenref"},
                 {"token", token},
                 {"deviceUUID", deviceUUID},
                 {"device", device},
-                {"username", username},
-                {"notification_data_body", notification}
+                {"user", username},
+                {"notifbody", notification}
         };
 
         if(username.equals(DEFAULT_EMPTY) || deviceUUID.equals(DEFAULT_EMPTY) || device.equals(DEFAULT_EMPTY)) {
 
         }else{
-            new HTTP_POST(context, data, ResFR.URL_on_token_refresh);
+            new HTTP_POST(context, data, ResFR.URL);
         }
     }
 

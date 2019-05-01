@@ -88,10 +88,11 @@ public class ActivityFoodMenu extends MyCustomActivity {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username}
+                {"act", "getsellermenu"},
+                {"mode", "mobile"},
+                {"user", username}
         };
-        httpGetAllMyFood = new CustomHTTP(context, data, ResFR.URL_get_my_food);
+        httpGetAllMyFood = new CustomHTTP(context, data, ResFR.URL);
         httpGetAllMyFood.ui = allListener;
         httpGetAllMyFood.execute();
     }
@@ -200,12 +201,12 @@ public class ActivityFoodMenu extends MyCustomActivity {
         progDeleteFood = new Dialog_Progress(activity, R.string.s_dialog_title_delete, R.string.s_prgdialog_deleting_food, true);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"op", "delete"},
-                {"datetime", staticFood.date_time_raw}
+                {"mode", "mobile"},
+                {"act", "delete"}
+//                {"datetime", staticFood.date_time_raw}
         };
 
-        httpDelete = new CustomHTTP(context, data, ResFR.URL_add_food);
+        httpDelete = new CustomHTTP(context, data, ResFR.URL);
         httpDelete.ui = allListener;
         httpDelete.execute();
     }
@@ -220,16 +221,28 @@ public class ActivityFoodMenu extends MyCustomActivity {
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.optJSONObject(i);
+//                    String date_time = json.optString("date_time");
+//                    String username = json.optString("username");
+//                    String image_file_name = json.optString("image_file_name");
+//                    String food_name = json.optString("food_name");
+//                    String food_price = json.optString("food_price");
+//                    String seller_location_lat = json.optString("seller_location_lat");
+//                    String seller_location_lng = json.optString("seller_location_lng");
+//                    String seller_name = json.optString("seller_name");
+//                    String is_seller = json.optString("is_seller");
+//                    String food_comment = json.optString("food_comment");
+    
+                    // edited 01.05.2019
                     String date_time = json.optString("date_time");
-                    String username = json.optString("username");
-                    String image_file_name = json.optString("image_file_name");
-                    String food_name = json.optString("food_name");
-                    String food_price = json.optString("food_price");
-                    String seller_location_lat = json.optString("seller_location_lat");
-                    String seller_location_lng = json.optString("seller_location_lng");
-                    String seller_name = json.optString("seller_name");
-                    String is_seller = json.optString("is_seller");
-                    String food_comment = json.optString("food_comment");
+                    String username = json.optString("user");
+                    String image_file_name = json.optString("imgfname");
+                    String food_name = json.optString("fdname");
+                    String food_price = json.optString("fdprice");
+                    String seller_location_lat = json.optString("slloclat");
+                    String seller_location_lng = json.optString("slloclng");
+                    String seller_name = json.optString("slname");
+                    String is_seller = json.optString("isseller");
+                    String food_comment = json.optString("fdcomment");
 
                     FoodListingObject food = new FoodListingObject(date_time, username, image_file_name, food_name, food_price, seller_location_lat, seller_location_lng, seller_name, is_seller, food_comment);
                     food.distanceString = "";

@@ -18,7 +18,7 @@
     <string name="s_item3_rec_view">食物列表</string>
     <string name="s_item4_dev">给 程序员</string>
     <string name="s_item5_loadimage">开发人员: Firebase Cloud Messanging (Broadcast)</string>
-    <string name="s_item6_setting">设置</string>
+    <string name="s_item6_setting">设置 Settings</string>
     <!--<string name="s_menu_search_food">Settings</string>-->
     <!--<string name="s_item6_setting">Settings</string>-->
     <!--<string name="s_item6_setting">Settings</string>-->
@@ -218,7 +218,7 @@
 
     <!--MENU ITEM TITLE-->
     <string name="s_menu_add_food">添加食物</string>
-    <string name="s_menu_setting">设置</string>
+    <string name="s_menu_setting">设置 Settings</string>
     <string name="s_menu_username">用户名:&#160;</string>
     <string name="s_menu_log_out">登出</string>
     <string name="s_menu_search_food">搜索</string>
@@ -249,4 +249,7 @@
 
     <string name="s_button_removemylocation">移除我的位置记录</string>
     <string name="s_deletelocationsuccess">位置记录已移除</string>
+    <string name="s_dialog_msg_yourlocationnotreceivedfrommap">地图位置获取失败</string>
+    <string name="s_radiobutton_main_quicksavelocation">快速模式：快速储存位置（位置可能不准确）</string>
+    <string name="s_radiobutton_main_chooselocationinmap">准确模式：在地图上标记位置</string>
 </resources>

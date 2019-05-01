@@ -209,7 +209,8 @@
 
                 <EditText
                     android:id="@+id/edittext_shopname"
-                    style="@style/style_margin_for_multiple_view"
+                    android:layout_marginBottom="@dimen/d_margin_padding_20"
+                    android:layout_marginTop="@dimen/d_margin_padding_20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/s_hint_shopname"
@@ -218,7 +219,8 @@
 
                 <EditText
                     android:id="@+id/edittext_comment"
-                    style="@style/style_margin_for_multiple_view"
+                    android:layout_marginBottom="@dimen/d_margin_padding_20"
+                    android:layout_marginTop="@dimen/d_margin_padding_20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/s_hint_commentdescription"

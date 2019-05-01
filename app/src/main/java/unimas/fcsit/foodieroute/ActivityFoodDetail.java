@@ -36,7 +36,7 @@ public class ActivityFoodDetail extends MyCustomActivity {
     private FusedLocationTracker locationTracker;
     private Listener listener;
     static FoodListingObject viewingFood;
-    private final String URL_READ_IMAGE = ResFR.URL_read_image + "?image_name=";
+    private final String URL_READ_IMAGE = ResFR.URL_READIMG + "?image_name=";
 
 
     @Override
@@ -62,28 +62,8 @@ public class ActivityFoodDetail extends MyCustomActivity {
 
         buttonlocateme.setOnClickListener(listener);
         buttongetdirection.setOnClickListener(listener);
-        /* Adjust Image Viewport Size */
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageViewFoodImage.getLayoutParams();
-        Log.d("AdapterImageView", "LinearLayout.LayoutParams params.width = "+params.width);
-        int screenWidth = Screen.getWidth(context);
-        Log.d("AdapterImageView", "screenWidth = "+screenWidth);
-        int pixelOf20dp = Screen.getPixels(context, 20.0f);
-        Log.d("AdapterImageView", "pixelOf20dp = "+pixelOf20dp);
-        int marginLR = pixelOf20dp * 2;
-        Log.d("AdapterImageView", "marginLR = "+marginLR);
-        int maxImageWidth = screenWidth - marginLR;
-        Log.d("AdapterImageView", "maxImageWidth = "+maxImageWidth);
 
-//        int imageViewNewWidth = maxImageWidth / 2;
-        if(maxImageWidth > 1280){
-            Log.d("AdapterImageView", "maxImageWidth > 1280 TRUE");
-            maxImageWidth = 1280;
-            params.width = 1280;
-        }
-        int imageViewNewHeight = maxImageWidth / 4 * 3;
-
-        params.height = imageViewNewHeight;
-        imageViewFoodImage.setLayoutParams(params);
+        adjustImageSize(imageViewFoodImage);
 
         Ion.with(context)
                 .load(URL_READ_IMAGE+viewingFood.image_file_name)
@@ -104,13 +84,20 @@ public class ActivityFoodDetail extends MyCustomActivity {
         textFoodSeller.setText(viewingFood.seller_name);
 
         if(viewingFood.is_seller.equals("1") || viewingFood.is_seller.equals("2")) {
-
+            // EMPTY!!!!!!!!!!!!!!!!!!!!!!!!!
         }else if(viewingFood.is_seller.equals("0")){
             /* Comment: */
-            String comment = ResFR.string(context, R.string.s_listview_comment);
-            comment = comment + " " + viewingFood.food_comment;
-            textFoodComment.setText(comment);
+            Log.d("food_comment_zz", viewingFood.food_comment);
+            Log.d("food_comment_zz", " ");
 
+            if(viewingFood.food_comment.equals(" ") || viewingFood.food_comment.equals("")){
+                textFoodComment.setText("");
+            } else {
+                Log.d("food_comment_zz", "textFoodComment.getText = "+textFoodComment.getText().toString());
+                String comment = ResFR.string(context, R.string.s_listview_comment);
+                comment = comment + " " + viewingFood.food_comment;
+                textFoodComment.setText(comment);
+            }
             /* username who posted/shared this food */
             String poster = ResFR.string(context, R.string.s_listview_username);
             poster = poster.replace("$user$", viewingFood.username);
@@ -119,6 +106,7 @@ public class ActivityFoodDetail extends MyCustomActivity {
 
         textFoodDistanceString.setText(viewingFood.distanceString);
     }
+
 
     private class Listener implements FusedLocationDataInterface, View.OnClickListener{
 
@@ -163,6 +151,14 @@ public class ActivityFoodDetail extends MyCustomActivity {
         i.putExtra(ResFR.BUNDLE_KEY_VIEW_MAP_ONLY, true);
         i.putExtra(ResFR.BUNDLE_KEY_MAP_LOCATION, new double[]{viewingFood.lat, viewingFood.lng});
         startActivity(i);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(viewingFood == null){
+            backButtonPressed();
+        }
     }
 
     void backButtonPressed(){

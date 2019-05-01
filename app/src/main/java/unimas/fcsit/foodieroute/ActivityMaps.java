@@ -126,6 +126,7 @@ public class ActivityMaps extends MyCustomActivity {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, mapZoomLevel));
             }
 
+            // if the checkbox is being checked...
             if(useMyCurrentLocation) {
                 shiftMarkerToCurrentLocation();
             }
@@ -256,67 +257,20 @@ public class ActivityMaps extends MyCustomActivity {
 
     private void saveLocation() {
         Intent i = new Intent();
-        i.putExtra("savedlocation", markerLocation);
+        i.putExtra(ResFR.INTENT_ACTIVITY_RESULT_PUT_EXTRA_LOCATION_KEY, markerLocation);
         setResult(RESULT_OK, i);
         backButtonPressed();
     }
 
     @Override
     void backButtonPressed() {
-        super.onPause();
+//        super.onPause();
         mapView.onPause();
+        if(viewmaponly){
+
+        }else {
+            fusedLocationTracker.stopLocationUpdates();
+        }
         super.backButtonPressed();
     }
 }
-
-/*
-
-XML ...........................
-* <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map"
-        tools:context=".MapLocationActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
-
-</LinearLayout>
-*
-* */
-
-//    private void checkLocationPermission() {
-//        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//
-//            ActivityCompat.requestPermissions(activity,
-//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                    FR_PERMISSIONS_REQUEST_CODE_LOCATION);
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-//
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//                new Dialog_AlertNotice(this, "Location Permission Needed",
-//                        "This app needs the Location permission, please accept to use location functionality")
-//                        .setPositiveKey("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        //Prompt the user once explanation has been shown
-//                        ActivityCompat.requestPermissions(ActivityMaps.this,
-//                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                                FR_PERMISSIONS_REQUEST_CODE_LOCATION );
-//                    }
-//                }).show();
-//
-//            } else {
-//                // No explanation needed, we can request the permission.
-//
-//            }
-//        }
-//    }

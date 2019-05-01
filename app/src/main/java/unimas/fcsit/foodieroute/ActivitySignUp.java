@@ -14,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +45,9 @@ public class ActivitySignUp extends MyCustomActivity {
         super.onCreate(savedInstanceState);
 
         createMyView(R.layout.activity_sign_up, R.id.toolbar_activity_sign_up);
+
+        ResFR.checkFirebaseTokenIfNoThenMakeToast(context);
+
         editUsername = (EditText) findViewById(R.id.edit_text_username);
         editEmail = (EditText) findViewById(R.id.edit_text_email);
         editPassword = (EditText) findViewById(R.id.edit_text_password);
@@ -95,7 +97,11 @@ public class ActivitySignUp extends MyCustomActivity {
 
 
 
-    void showWarning() {
+    void showWarningFillAll() {
+        new Dialog_AlertNotice(context, R.string.s_dialog_title_error, R.string.s_dialog_msg_plsfillall).setPositiveKey(R.string.s_dialog_btn_ok, null);
+    }
+
+    void showWarningIncorrectPassword() {
         new Dialog_AlertNotice(context, R.string.s_dialog_title_error, R.string.s_dialog_msg_plsfillall).setPositiveKey(R.string.s_dialog_btn_ok, null);
     }
 
@@ -112,12 +118,12 @@ public class ActivitySignUp extends MyCustomActivity {
 
         String is_seller = "0";
 
-        if (username.matches("") || email.matches("") || password.matches("") || confirm.matches("")) {
+        if (username.equals("") || email.equals("") || password.equals("") || confirm.equals("")) {
             pd.dismiss();
-            showWarning();
+            showWarningFillAll();
         } else if (!password.equals(confirm)) {
             pd.dismiss();
-            showWarning();
+            showWarningFillAll();
         } else if (isSeller) {
             is_seller = "1";
             if(isSeller && isMobile){
@@ -125,9 +131,9 @@ public class ActivitySignUp extends MyCustomActivity {
                 is_seller = "2";
             }
             String shopname = editShopname.getText().toString();
-            if (shopname.matches("") || pickedLocation == null) {
+            if (shopname.equals("") || pickedLocation == null) {
                 pd.dismiss();
-                showWarning();
+                showWarningFillAll();
             } else {
                 submitData(username, email, password, confirm, is_seller, shopname, pickedLocation);
             }
@@ -147,18 +153,18 @@ public class ActivitySignUp extends MyCustomActivity {
 
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username},
+                {"act", "signup"},
+                {"user", username},
                 {"email", email},
-                {"password", md5(password)},
+                {"pass", md5(password)},
                 {"confirm", md5(confirm)},
-                {"is_seller", is_seller},
+                {"isseller", is_seller},
                 {"token", token},
                 {"deviceUUID", deviceUUID},
                 {"device", device}
         };
 
-        CustomHTTP cc = new CustomHTTP(context, data, ResFR.URL_sign_up);
+        CustomHTTP cc = new CustomHTTP(context, data, ResFR.URL);
         cc.ui = new InterfaceCustomHTTP() {
             @Override
             public void onCompleted(String result) {
@@ -198,24 +204,24 @@ public class ActivitySignUp extends MyCustomActivity {
         String device = Build.MODEL;
         ResFR.setPrefString(context, ResFR.DEVICE, device);
         device = ResFR.getPrefString(context, ResFR.DEVICE);
-
-
+    
+    
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"username", username},
+                {"act", "signup"},
+                {"user", username},
                 {"email", email},
-                {"password", md5(password)},
+                {"pass", md5(password)},
                 {"confirm", md5(confirm)},
-                {"is_seller", is_seller},
+                {"isseller", is_seller},
                 {"token", token},
                 {"deviceUUID", deviceUUID},
                 {"device", device},
-                {"seller_name", shopname},
-                {"seller_location_lat", stringOf(location[0])},
-                {"seller_location_lng", stringOf(location[1])}
+                {"slname", shopname},
+                {"slloclat", stringOf(location[0])},
+                {"slloclng", stringOf(location[1])}
         };
 
-        CustomHTTP cc = new CustomHTTP(context, data, ResFR.URL_sign_up);
+        CustomHTTP cc = new CustomHTTP(context, data, ResFR.URL);
         cc.ui = new InterfaceCustomHTTP() {
             @Override
             public void onCompleted(String result) {
@@ -255,7 +261,7 @@ public class ActivitySignUp extends MyCustomActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // return from map activity
         if (resultCode == RESULT_OK && requestCode == PICK_LOC_CODE) {
-            pickedLocation = data.getExtras().getDoubleArray("savedlocation");
+            pickedLocation = data.getExtras().getDoubleArray(ResFR.INTENT_ACTIVITY_RESULT_PUT_EXTRA_LOCATION_KEY);
             if (pickedLocation == null) {
                 Log.d("Elliot", "returned Location success. Result is null");
             } else {

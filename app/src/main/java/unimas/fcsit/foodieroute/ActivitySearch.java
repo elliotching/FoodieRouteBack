@@ -125,11 +125,11 @@ public class ActivitySearch extends MyCustomActivity {
 
         String searchKey = editSearch.getText().toString();
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
+                {"act", "search"},
                 {"key", searchKey}
         };
 
-        httpSearch = new CustomHTTP(context, data, ResFR.URL_search);
+        httpSearch = new CustomHTTP(context, data, ResFR.URL);
         httpSearch.ui = listener;
         httpSearch.execute();
     }
@@ -144,6 +144,18 @@ public class ActivitySearch extends MyCustomActivity {
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.optJSONObject(i);
+//                    String date_time = json.optString("date_time");
+//                    String username = json.optString("username");
+//                    String image_file_name = json.optString("image_file_name");
+//                    String food_name = json.optString("food_name");
+//                    String food_price = json.optString("food_price");
+//                    String seller_location_lat = json.optString("seller_location_lat");
+//                    String seller_location_lng = json.optString("seller_location_lng");
+//                    String seller_name = json.optString("seller_name");
+//                    String is_seller = json.optString("is_seller");
+//                    String food_comment = json.optString("food_comment");
+                    
+                    //edited 01.05.2019
                     String date_time = json.optString("date_time");
                     String username = json.optString("username");
                     String image_file_name = json.optString("image_file_name");

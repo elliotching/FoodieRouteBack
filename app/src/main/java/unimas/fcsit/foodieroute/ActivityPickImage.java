@@ -32,6 +32,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -170,6 +171,14 @@ public class ActivityPickImage extends MyCustomActivity {
         if (selectedImageFilePath != null) {
             String imgPath = selectedImageFilePath[0];
             String filename = selectedImageFilePath[1];
+
+
+
+
+
+
+
+
             if (imgPath != null && !imgPath.isEmpty()) {
 
                 Intent i = new Intent();
@@ -209,19 +218,24 @@ public class ActivityPickImage extends MyCustomActivity {
         // handle result of CropImageActivity
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
             Uri imageUri = CropImage.getPickImageResultUri(this, data);
+//            startCropImageActivity(AsyncBlackBackgrImage.createBackground(context, imageUri));
             startCropImageActivity(imageUri);
         }
 
         if ((requestCode == GALLERY_INTENT || requestCode == CAMERA_INTENT) && resultCode == RESULT_OK) {
-            Uri imagerUri = CropImage.getPickImageResultUri(context, data);
-            Log.d(getLocalClassName() + "pick image", imagerUri.toString());
-            startCropImageActivity(imagerUri);
+            Uri imageUri = CropImage.getPickImageResultUri(context, data);
+            Log.d(getLocalClassName() + "pick image", imageUri.toString());
+
+//            startCropImageActivity(AsyncBlackBackgrImage.createBackground(context, imageUri));
+            startCropImageActivity(imageUri);
         }
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 ((ImageView) findViewById(R.id.imageview_myactivity)).setImageURI(result.getUri());
+
+                Log.d("CropResultUri", result.getUri().toString());
 
                 MyBmpInfo bmpinfo = getThumbnail(result.getUri());
                 Bitmap b = bmpinfo.result;
@@ -232,17 +246,20 @@ public class ActivityPickImage extends MyCustomActivity {
 
                 Toast.makeText(this, "Cropping successful", Toast.LENGTH_LONG).show();
 
-                Bitmap watermarked = watermark(b);
-
+                b = watermark(b);
                 // Save image as .jpg file in phone public "Picture" directory
-                selectedImageFilePath = saveFile(watermarked);
+                selectedImageFilePath = saveFile(b);
+                selectedImageFilePath = new String[]{selectedImageFilePath[0], selectedImageFilePath[1], result.getUri().toString()};
+                Toast.makeText(this, "Saved successfully", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(this, "Saved successfully", Toast.LENGTH_LONG);
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
     }
+
+
 
     private Bitmap watermark(Bitmap b) {
         int bmpWidth = b.getWidth();
@@ -274,7 +291,6 @@ public class ActivityPickImage extends MyCustomActivity {
 
         return wtBitmap;
     }
-
 
     /**
      * Start crop image activity for the given image.
@@ -318,6 +334,7 @@ public class ActivityPickImage extends MyCustomActivity {
     public MyBmpInfo getThumbnail(Uri uri) {
         int w = 1280;
         int h = 960;
+        double TARGETTED_WIDTH = 1920.0;
 
         try {
             InputStream input = this.getContentResolver().openInputStream(uri);
@@ -333,17 +350,27 @@ public class ActivityPickImage extends MyCustomActivity {
                 return null;
             }
 
-            int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+            int originalWidth = onlyBoundsOptions.outWidth;
 
-//        double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
-//            double ratio = 1.0;
+            double ratio = 1.0;
+            if (originalWidth > TARGETTED_WIDTH){
+
+                /*
+                * Ratio Sample Size:
+                * if 1 , means bitmap is exactly stay as orginal.
+                * if 2 or above, means 1/2 or smaller from the ori image.*/
+                ratio = originalWidth / TARGETTED_WIDTH;
+            }
 
             BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//            bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
-//            bitmapOptions.inDither = true; //optional
+            bitmapOptions.inSampleSize = (int)Math.round(ratio);
+
+            Log.d("bitmap scaled info", "ratio = "+ratio+" , poweredRatio = "+bitmapOptions.inSampleSize+", originalWidth = "+originalWidth+" , TARGETTED_WIDTH = "+TARGETTED_WIDTH);
+
             bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;//
             input = this.getContentResolver().openInputStream(uri);
             Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, )
             input.close();
             Log.d("elliot", "bitmap before resize: SIZE = " + bitmap.getWidth() + " x " + bitmap.getHeight());
             if (bitmap.getWidth() < w || bitmap.getHeight() < h) {

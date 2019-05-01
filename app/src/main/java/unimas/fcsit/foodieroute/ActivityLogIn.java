@@ -74,7 +74,7 @@ public class ActivityLogIn extends MyCustomActivity {
         checkLogInStatus = new AsyncCheckLogInStatus(context);
         checkLogInStatus.interfaceCustomHTTP = httpResult;
 
-        startCheckVersionUpdate();
+//        startCheckVersionUpdate();
 
         /*********************************************************
          * HOW TO GET ARGUMENTS::
@@ -95,10 +95,11 @@ public class ActivityLogIn extends MyCustomActivity {
     private void startCheckVersionUpdate() {
         progCheckVersionUpdate = new Dialog_Progress(activity, R.string.s_prgdialog_title_update, R.string.s_prgdialog_checking_version, false);
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"version", ResFR.currentVersion}
+                {"act", "chkversion"},
+                {"version", ResFR.currentVersion},
+                {"mode","mobile"}
         };
-        httpCheckVersionUpdate = new CustomHTTP(context, data, ResFR.URL_check_version_update);
+        httpCheckVersionUpdate = new CustomHTTP(context, data, ResFR.URL);
         httpCheckVersionUpdate.ui = httpResult;
         httpCheckVersionUpdate.execute();
     }
@@ -163,10 +164,10 @@ public class ActivityLogIn extends MyCustomActivity {
         progLogIn = new Dialog_Progress(activity, R.string.s_prgdialog_title_log_in,
                 R.string.s_prgdialog_log_in_authenticate, false);
 
-        final String username_email = editTextUsername.getText().toString();
+        final String user_email = editTextUsername.getText().toString();
         String password = editTextPassword.getText().toString();
 
-        if (username_email.matches("") || password.matches("")) {
+        if (user_email.equals("") || password.equals("")) {
             progLogIn.dismiss();
             new Dialog_AlertNotice(context, R.string.s_dialog_title_error, R.string.s_dialog_msg_plsfillall).setPositiveKey(R.string.s_dialog_btn_ok, null);
         } else {
@@ -175,22 +176,24 @@ public class ActivityLogIn extends MyCustomActivity {
             String device = ResFR.getPrefString(context, ResFR.DEVICE);
 
             String token = FirebaseInstanceId.getInstance().getToken();
+            token = ResFR.getTokenFromFCM_JSON(token);
             ResFR.setPrefString(context, ResFR.TOKEN, token);
             token = ResFR.getPrefString(context, ResFR.TOKEN);
 
-            Log.d(this.getClass().getSimpleName(), "username from edit text = " + username_email);
-            Log.d(this.getClass().getSimpleName(), "deviceUUID = " + deviceUUID);
+//            Log.d(this.getClass().getSimpleName(), "username from edit text = " + user_email);
+//            Log.d(this.getClass().getSimpleName(), "deviceUUID = " + deviceUUID);
 
             String[][] data = new String[][]{
-                    {"pass", "!@#$"},
-                    {"username", username_email},
-                    {"password", md5(password)},
+                    {"act", "login"},
+//                    {"key", "C35D"},
+                    {"user", user_email},
+                    {"pass", password},
                     {"deviceUUID", deviceUUID},
                     {"device", device},
                     {"token", token}
             };
 
-            httpLogIn = new CustomHTTP(context, data, ResFR.URL_log_in);
+            httpLogIn = new CustomHTTP(context, data, ResFR.URL);
             httpLogIn.ui = httpResult;
             httpLogIn.execute();
         }
@@ -266,11 +269,11 @@ public class ActivityLogIn extends MyCustomActivity {
         String username = ResFR.getPrefString(context, ResFR.USERNAME);
 
         String[][] data = new String[][]{
-                {"pass", "!@#$"},
-                {"activation_code", code},
-                {"username", username}
+                {"act", "activation"},
+                {"code", code},
+                {"user", username}
         };
-        httpActivation = new CustomHTTP(context, data, ResFR.URL_account_activation);
+        httpActivation = new CustomHTTP(context, data, ResFR.URL);
         httpActivation.ui = httpResult;
 
         httpActivation.execute();
@@ -332,21 +335,29 @@ public class ActivityLogIn extends MyCustomActivity {
                 progLogIn.dismiss();
                 try {
                     JSONObject json = new JSONObject(result);
-                    String username_json = json.optString("username");
+//                    String username_json = json.optString("username");
+                    String username_json = json.optString("user");
                     String activated = json.optString("activated", "0");
-                    Log.d(this.getClass().getSimpleName(), "username from json = " + username_json);
+                    Log.d(this.getClass().getSimpleName(), "user from json = " + username_json);
 
                     String success = json.optString("success", "0");
                     String email = json.optString("email");
-                    String is_seller = json.optString("is_seller");
+                    String is_seller = json.optString("isseller");
 
                     if (is_seller.equals("1") || is_seller.equals("2")) {
-                        String seller_location_lat = json.optString("seller_location_lat");
-                        String seller_location_lng = json.optString("seller_location_lng");
-                        String seller_ic_photo = json.optString("seller_ic_photo");
-                        String seller_doc_1 = json.optString("seller_doc_1");
-                        String seller_doc_2 = json.optString("seller_doc_2");
-                        String seller_name = json.optString("seller_name");
+//                        String seller_location_lat = json.optString("seller_location_lat");
+//                        String seller_location_lng = json.optString("seller_location_lng");
+//                        String seller_ic_photo = json.optString("seller_ic_photo");
+//                        String seller_doc_1 = json.optString("seller_doc_1");
+//                        String seller_doc_2 = json.optString("seller_doc_2");
+//                        String seller_name = json.optString("seller_name");
+                        // edited 01.05.2019
+                        String seller_location_lat = json.optString("slloclat");
+                        String seller_location_lng = json.optString("slloclng");
+                        String seller_ic_photo = json.optString("slic");
+                        String seller_doc_1 = json.optString("sldoc1");
+                        String seller_doc_2 = json.optString("sldoc2");
+                        String seller_name = json.optString("slname");
                         ResFR.setPrefString(context, ResFR.SELLER_NAME, seller_name);
                         ResFR.setPrefString(context, ResFR.SELLER_DOC_1, seller_doc_1);
                         ResFR.setPrefString(context, ResFR.SELLER_DOC_2, seller_doc_2);
@@ -390,8 +401,8 @@ public class ActivityLogIn extends MyCustomActivity {
 
                 Log.d("onCompleted", "http == checkLogInStatus.interfaceCustomHTTP");
                 progCheck.dismiss();
-                if (result.matches("")) {
-                    Log.d(this.getClass().getSimpleName(), "result empty");
+                if (result.equals("")) {
+                    activity.finish();
                 } else {
                     try {
                         JSONObject json = new JSONObject(result);
@@ -424,7 +435,7 @@ public class ActivityLogIn extends MyCustomActivity {
 
                             Intent ii = new Intent(context, ActivityLogIn.class);
                             ii.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            ii.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                            ii.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             ii.putExtras(bundle);
 
                             startActivity(ii);
@@ -437,7 +448,7 @@ public class ActivityLogIn extends MyCustomActivity {
                         e.printStackTrace();
 
                         // SHOW ERROR MESSAGE FROM PHP!!!
-                        showDialogPhpError(result);
+                        showDialogPhpError(result, true);
 
                     }
                 }
@@ -446,8 +457,10 @@ public class ActivityLogIn extends MyCustomActivity {
         }
     }
 
+
     private void validateVersionResultAndCheckKicked(String s) {
-        if (!s.matches("")) {
+        // if result is not empty, got something. 1. Fail to connect 2. JSONArray
+        if (!s.equals("")) {
             try {
                 JSONArray jarray = new JSONArray(s);
                 String latest = "";

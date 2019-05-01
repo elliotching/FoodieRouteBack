@@ -32,21 +32,34 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(ins);
 
         String token = ResFR.getPrefString(context, ResFR.TOKEN);
-        final String deviceUUID = ResFR.getPrefString(context, ResFR.DEVICEUUID);
-        final String device = ResFR.getPrefString(context, ResFR.DEVICE);
+        String deviceUUID = ResFR.getPrefString(context, ResFR.DEVICEUUID);
+        String device = ResFR.getPrefString(context, ResFR.DEVICE);
+        if(deviceUUID.equals(ResFR.DEFAULT_EMPTY) || device.equals(ResFR.DEFAULT_EMPTY)) {
 
-        timerTask = new TimerTask_FR(10, new InterfaceMyTimerTask() {
-            @Override
-            public void doTask() {
-                getFirebaseToken(deviceUUID, device);
-            }
+            Log.d(this.getClass().getSimpleName(), "deviceUUID and device NOT FOUND!!!");
 
-            @Override
-            public void secondsPassed(int runningTime) {
+            String deviceModel = Build.MODEL;
+            deviceUUID = deviceModel + "-" + UUID.randomUUID().toString();
+            device = deviceModel;
 
-            }
-        });
+            ResFR.setPrefString(context, DEVICEUUID, deviceUUID);
+            ResFR.setPrefString(context, DEVICE, device);
+        }
+        getFirebaseToken(deviceUUID, device);
+//        timerTask = new TimerTask_FR(10, new InterfaceMyTimerTask() {
+//            @Override
+//            public void doTask() {
+//                getFirebaseToken(deviceUUID, device);
+//            }
+//
+//            @Override
+//            public void secondsPassed(int runningTime) {
+//
+//            }
+//        });
 
+//        finish();
+//        startActivity(new Intent(context, ActivityLogIn.class));
     }
 
     void updateLang(){
@@ -85,8 +98,14 @@ public class SplashScreen extends AppCompatActivity {
         if (FirebaseInstanceId.getInstance().getToken() == null) {
             // do nothing
             Log.d(this.getClass().getSimpleName(), "token not found. ");
+            
+            //editted 01.05.2019
+    
+            finish();
+            startActivity(new Intent(context, ActivityLogIn.class));
         } else {
             String token = FirebaseInstanceId.getInstance().getToken();
+            token = ResFR.getTokenFromFCM_JSON(token);
             ResFR.setPrefString(context, ResFR.TOKEN, token);
 //            ResFR.setPrefString(context, ResFR.TOKEN, token);
             Log.d(this.getClass().getSimpleName(), "token get success. " + token);
@@ -97,10 +116,5 @@ public class SplashScreen extends AppCompatActivity {
             finish();
             startActivity(new Intent(context, ActivityLogIn.class));
         }
-
-
-
     }
-
-
 }

@@ -42,14 +42,15 @@ class AsyncCheckLogInStatus {
 
         } else {
             String[][] data = new String[][]{
-                    {"pass", "!@#$"},
+                    {"act", "chklogin"},
+                    {"mode", "mobile"},
                     {"token", token},
                     {"deviceUUID", deviceUUID},
                     {"device", device},
-                    {"username", username}
+                    {"user", username}
             };
 
-            httpAsyncCheck = new CustomHTTP(context, data, ResFR.URL_check_log_in_status);
+            httpAsyncCheck = new CustomHTTP(context, data, ResFR.URL);
             httpAsyncCheck.ui = interfaceCustomHTTP;
             httpAsyncCheck.execute();
         }

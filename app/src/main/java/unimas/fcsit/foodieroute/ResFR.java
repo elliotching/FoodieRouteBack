@@ -4,8 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by elliotching on 24-Feb-17.
@@ -40,8 +45,15 @@ class ResFR {
     static final String DEFAULT_EMPTY = "empty";
     static final String THEME_LIGHT_DEFAULT = "Light";
     static final String THEME_DARK = "Dark";
-    static final float DEFAULT_EMPTY_LOCATION = 12123123123123123.0f;//Float.MAX_VALUE;
-    static final float CHECK_EMPTY_LOCATION = 12123123123123.0f;;
+    static final String RADIO_BUTTON_QUICK_OR_PRECISE = "radio_button_0_quick_or_1_precise";
+    static final float DEFAULT_EMPTY_LOCATION = Float.MAX_VALUE;//Float.MAX_VALUE;
+    static final float CHECK_EMPTY_LOCATION = Float.MAX_VALUE / 10.0f;
+    static final String LAST_PIC_TAKEN_PATH = "FR_last_pic_path";
+    static final String LAST_PIC_NAME = "FR_last_pic_name";
+    static final String LAST_PIC_INCOMPLETE = "FR_last_pic_incomplete";
+
+//    static final float DEFAULT_EMPTY_LOCATION = 12123123123123123.0f;//Float.MAX_VALUE;
+//    static final float CHECK_EMPTY_LOCATION = 12123123123123.0f;;
 
 
     // USED IN ACTIVITY LOG IN ( WHENEVER RECEIVED MESSAGE OF "LOG OUT" = 1 )
@@ -49,6 +61,9 @@ class ResFR {
     static final String BUNDLE_KEY_KICKED_OUT = "kicked_out";
     static final String BUNDLE_KEY_VIEW_MAP_ONLY = "view_map_only";
     static final String BUNDLE_KEY_MAP_LOCATION = "marker_location";
+
+    static final String INTENT_ACTIVITY_RESULT_PUT_EXTRA_LOCATION_KEY = "savedlocation";
+
     static final String BUNDLE_KEY_VIEW_MY_FOOD_ONLY = "view_my_food_only";
     static final String BUNDLE_KEY_ADDING_FOOD_MENU = "adding_food_menu";
 
@@ -57,24 +72,30 @@ class ResFR {
     static final String URL_insert_token = "http://foodlocator.com.my/mobile/insert_token.php";
 
     // currently_active!!!
-    static final String URL_send_mesg = "http://foodlocator.com.my/mobile/send_mesg.php";
-    static final String URL_sign_up = "http://foodlocator.com.my/mobile/sign_up.php";
-    static final String URL_log_in = "http://foodlocator.com.my/mobile/log_in.php";
-    static final String URL_check_log_in_status = "http://foodlocator.com.my/mobile/check_log_in_status.php";
-    static final String URL_on_token_refresh = "http://foodlocator.com.my/mobile/on_token_refresh.php";
-    static final String URL_upload = "http://foodlocator.com.my/mobile/imgupload/upload.php";
-    static final String URL_add_food = "http://foodlocator.com.my/mobile/add_food.php";
-    static final String URL_read_image = "http://foodlocator.com.my/mobile/imgupload/read_image.php";
-    static final String URL_read_small_image = "http://foodlocator.com.my/mobile/imgupload/read_small_image.php";
-    static final String URL_get_all_food = "http://foodlocator.com.my/mobile/get_all_food.php";
-    static final String URL_get_my_food = "http://foodlocator.com.my/mobile/get_my_food.php";
-    static final String URL_check_version_update = "http://foodlocator.com.my/mobile/check_version_update.php";
-    static final String URL_account_activation = "http://foodlocator.com.my/mobile/account_activation.php";
-    static final String URL_change_password = "http://foodlocator.com.my/mobile/change_password.php";
-    static final String URL_log_out = "http://foodlocator.com.my/mobile/log_out.php";
-    static final String URL_update_seller_location = "http://foodlocator.com.my/mobile/update_seller_location.php";
-    static final String URL_get_all_token = "http://foodlocator.com.my/mobile/get_all_token.php";
-    static final String URL_search = "http://foodlocator.com.my/mobile/search.php";
+//    private static final String DOMAIN = "192.168.0.108";//foodlocator.com.my
+    private static final String DOMAIN = "http://192.168.50.3:8012/mb/";
+//    private static final String DOMAIN = "https://kalivolume.xyz/mb/";
+    
+    static final String URL = DOMAIN+"action.php";
+    static final String URL_READIMG = DOMAIN+"read_img.php";
+    static final String URL_UPLOAD = DOMAIN+"imgupload/upload.php";
+//    static final String URL_send_mesg = "http://"+DOMAIN+"/mobile/send_mesg.php";
+//    static final String URL_sign_up = "http://"+DOMAIN+"/mobile/sign_up.php";
+//    static final String URL_log_in = "http://"+DOMAIN+"/mobile/log_in.php";
+//    static final String URL_check_log_in_status = "http://"+DOMAIN+"/mobile/check_log_in_status.php";
+//    static final String URL_on_token_refresh = "http://"+DOMAIN+"/mobile/on_token_refresh.php";
+//    static final String URL_add_food = "http://"+DOMAIN+"/mobile/add_food.php";
+//    static final String URL_read_image = "http://"+DOMAIN+"/mobile/imgupload/read_image.php";
+//    static final String URL_read_small_image = "http://"+DOMAIN+"/mobile/imgupload/read_small_image.php";
+//    static final String URL_get_all_food = "http://"+DOMAIN+"/mobile/get_all_food.php";
+//    static final String URL_get_my_food = "http://"+DOMAIN+"/mobile/get_my_food.php";
+//    static final String URL_check_version_update = "http://"+DOMAIN+"/mobile/check_version_update.php";
+//    static final String URL_account_activation = "http://"+DOMAIN+"/mobile/account_activation.php";
+//    static final String URL_change_password = "http://"+DOMAIN+"/mobile/change_password.php";
+//    static final String URL_log_out = "http://"+DOMAIN+"/mobile/log_out.php";
+//    static final String URL_update_seller_location = "http://"+DOMAIN+"/mobile/update_seller_location.php";
+//    static final String URL_get_all_token = "http://"+DOMAIN+"/mobile/get_all_token.php";
+//    static final String URL_search = "http://"+DOMAIN+"/mobile/search.php";
 
 
     ResFR(Context c){
@@ -93,6 +114,10 @@ class ResFR {
         return ResourcesCompat.getColor(context.getResources(),_R,null);
     }
 
+    static int color(Context context, int _R){
+        return ResourcesCompat.getColor(context.getResources(),_R,null);
+    }
+
     static int dimenPx(Context context,int _d){
         return context.getResources().getDimensionPixelSize(_d);
     }
@@ -101,6 +126,11 @@ class ResFR {
         return context.getResources().getString(_R);
     }
 
+
+
+    /************/
+    // GET
+    /************/
     static String getPrefString(Context context, String keyName){
         SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
         return pref.getString(keyName, DEFAULT_EMPTY);
@@ -114,6 +144,13 @@ class ResFR {
     static boolean getPrefIsAppRunning(Context context){
         SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
         return pref.getBoolean(APP_IS_ACTIVE , false);
+    }
+
+    static int getPrefRadioOfUpdateLocation(Context context){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        int quick0OrPrecise1 = pref.getInt(RADIO_BUTTON_QUICK_OR_PRECISE , -1);
+        Log.d("getRadioButtonStatus", "Pref Radio Int Number = "+quick0OrPrecise1);
+        return quick0OrPrecise1;
     }
 
     static double[] getPrefLocation(Context context){
@@ -143,6 +180,22 @@ class ResFR {
         }
     }
 
+    static String[] getPrefLastPic(Context context){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        String lastPath = pref.getString(LAST_PIC_TAKEN_PATH , DEFAULT_EMPTY);
+        String lastPicName = pref.getString(LAST_PIC_NAME , DEFAULT_EMPTY);
+        return new String[]{lastPath, lastPicName};
+    }
+
+    static boolean getPrefCheckLastPic(Context context){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        boolean lastPath = pref.getBoolean(LAST_PIC_INCOMPLETE , false);
+        return lastPath;
+    }
+
+    /************/
+    // SAVE SET
+    /************/
     static void setPrefString(Context context, String keyName, String value){
         SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit().putString(keyName, value);
@@ -169,6 +222,33 @@ class ResFR {
         editor.commit();
     }
 
+    static void setPrefRadioOfUpdateLocation(Context context, int isQuick0OrPrecise1Checked){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt( RADIO_BUTTON_QUICK_OR_PRECISE, isQuick0OrPrecise1Checked);
+        editor.commit();
+    }
+
+    static void setPrefLastPic(Context context, String[] image){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean( LAST_PIC_INCOMPLETE, true);
+        editor.putString( LAST_PIC_TAKEN_PATH, image[0]);
+        editor.putString( LAST_PIC_NAME, image[1]);
+        editor.commit();
+    }
+
+    static void setPrefRemoveLastPic(Context context){
+        SharedPreferences pref = context.getSharedPreferences("FoodieRoute", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean( LAST_PIC_INCOMPLETE, false);
+        editor.putString( LAST_PIC_TAKEN_PATH, DEFAULT_EMPTY);
+        editor.putString( LAST_PIC_NAME, DEFAULT_EMPTY);
+        editor.commit();
+    }
+
+
+
     private static String stringOf(double value){
         return String.format("%.10f", value);
     }
@@ -181,4 +261,26 @@ class ResFR {
         }
     }
 
+    static void checkFirebaseTokenIfNoThenMakeToast(Context c){
+        String token = ResFR.getPrefString(c, ResFR.TOKEN);
+        if(token.equals(ResFR.DEFAULT_EMPTY)){
+            Toast.makeText(c, "Token not found.", Toast.LENGTH_LONG).show();
+        }else{
+//            Toast.makeText(c, "Token found.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    static String getTokenFromFCM_JSON(String tokenInJSON) {
+        String jtoken = "";
+        try {
+            JSONObject json = new JSONObject(tokenInJSON);
+            jtoken = json.optString("token");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return tokenInJSON;
+        }
+
+        Log.d("RESFR.getToken",jtoken);
+        return jtoken;
+    }
 }
